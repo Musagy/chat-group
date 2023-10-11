@@ -1,0 +1,26 @@
+spring:
+  profile.active: dev, test, prod
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/chat-group-db}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:chupapi1234}
+    driver-class-name: org.postgresql.Driver
+
+  # For Development
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate.ddl-auto: update
+
+# Server error properties
+server:
+  error:
+    include-stacktrace: never
+
+#env
+api:
+  security:
+    secret: ${JWT_SECRET:Hola chupapis}
