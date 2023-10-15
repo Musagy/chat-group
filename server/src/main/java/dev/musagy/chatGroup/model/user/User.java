@@ -21,4 +21,6 @@ public class User {
     private String userAlias;
     // Este tiene que ser hasheado
     private String password;
+    // Role (por defecto USER)
+    private Role role;
 }
