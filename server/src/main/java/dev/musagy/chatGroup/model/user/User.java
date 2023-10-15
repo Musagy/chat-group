@@ -23,4 +23,19 @@ public class User {
     private String password;
     // Role (por defecto USER)
     private Role role;
+
+    public User(SignUpRequest user, String passwordEncrypt, Role role) {
+        this.email = user.email();
+        this.username = user.username();
+        this.userAlias = user.userAlias();
+        this.password = passwordEncrypt;
+        this.role = role;
+    }
+    public User(SignUpRequest user, String passwordEncrypt) {
+        this.email = user.email();
+        this.username = user.username();
+        this.userAlias = user.userAlias();
+        this.password = passwordEncrypt;
+        this.role = Role.USER;
+    }
 }
