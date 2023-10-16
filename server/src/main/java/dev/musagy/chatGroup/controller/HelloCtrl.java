@@ -9,4 +9,12 @@ public class HelloCtrl {
     public String helloChupapi() {
         return "hola chupapis";
     }
+    @GetMapping("/authenticated")
+    public String GoToLogin() {
+        return "Si les esto, estas autenticado";
+    }
+    @GetMapping("/auth/test")
+    public String authlogin() {
+        return "logeate";
+    }
 }
