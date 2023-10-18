@@ -3,7 +3,7 @@ package dev.musagy.chatGroup.model.user;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record SignUpResponse(
+public record SignInOrSignUpResponse(
     @NotNull
     User user,
     @NotBlank
