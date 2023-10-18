@@ -11,6 +11,7 @@ public interface UserService {
     User saveUser(SignUpRequest req);
 
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
 
     @Transactional
     void changeRole(Role newRole, String username);

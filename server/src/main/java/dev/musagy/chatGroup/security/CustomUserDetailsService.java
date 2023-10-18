@@ -17,11 +17,21 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    private User findUser(String usernameOrEmail) throws UsernameNotFoundException {
+        var userFound = userService.findByUsername(usernameOrEmail);
+
+        if (userFound.isEmpty()) userFound = userService.findByEmail(usernameOrEmail);
+
+        if (userFound.isEmpty())
+            throw new UsernameNotFoundException("el usuario no fue encontrado: " + usernameOrEmail);
+
+        return userFound.get();
+    }
+
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("el usuario no fue encontrado: " + username)
-        );
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        User user = findUser(usernameOrEmail);
+
         Set<GrantedAuthority> authorities = Set.of(SecurityUtils
                 .convertToAuthority(user.getRole().name())
         );
@@ -29,7 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return UserPrincipal.builder()
                 .user(user)
                 .id(user.getId())
-                .username(username)
+                .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(authorities)
                 .build();
