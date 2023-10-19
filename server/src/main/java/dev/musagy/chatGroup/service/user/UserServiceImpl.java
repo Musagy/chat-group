@@ -4,6 +4,7 @@ import dev.musagy.chatGroup.model.user.Role;
 import dev.musagy.chatGroup.model.user.SignUpRequest;
 import dev.musagy.chatGroup.model.user.User;
 import dev.musagy.chatGroup.repository.UserRepository;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(SignUpRequest req) {
+        if (req.username().contains("@"))
+            throw new ValidationException("El username no pude contener \"@\"");
+
+        if (findByEmail(req.email()).isPresent())
+            throw new ValidationException("El email \"" + req.email() + "\" ya esta en uso");
+
+        if (findByUsername(req.username()).isPresent())
+            throw new ValidationException("El username \"" + req.username() + "\" ya esta en uso");
+
         String passwordEncrypt = passwordEncoder.encode(req.password());
 
         return userRepository
