@@ -1,14 +1,18 @@
 package dev.musagy.chatGroup.security.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.musagy.chatGroup.model.user.User;
+import dev.musagy.chatGroup.security.CustomUserDetailsService;
 import dev.musagy.chatGroup.security.UserPrincipal;
 import dev.musagy.chatGroup.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +30,8 @@ import java.util.stream.Collectors;
 public class JwtProviderImpl implements JwtProvider{
     @Value("${api.jwt.secret}")
     private String JWT_SECRET;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     private Instant generateExpires() {
         return LocalDateTime.now()
@@ -37,20 +43,29 @@ public class JwtProviderImpl implements JwtProvider{
         return Algorithm.HMAC256(JWT_SECRET);
     }
 
-    private Map<String, Claim> extractClaims(HttpServletRequest req) {
+    private DecodedJWT extractClaims(HttpServletRequest req) {
         String token = SecurityUtils.extractAuthTokenFromRequest(req);
 
-        if (token == null) return null;
+        return decodeToken(token);
+    }
+    private DecodedJWT decodeToken(String token) {
+        if (token == null)
+            throw new RuntimeException();
 
-        Algorithm algorithm = getAlgorithm();
-
+        DecodedJWT decodedJWT = null;
         try {
-            return JWT.require(algorithm)
-                    .build()
-                    .verify(token).getClaims();
-        } catch (JWTVerificationException ex) {
-            return null;
+            Algorithm algorithm = getAlgorithm();
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer("Musagy dev")
+                    .build();
+
+            decodedJWT = verifier.verify(token);
+        } catch (JWTVerificationException exception){
+            System.out.println(exception.toString());
         }
+        if ((decodedJWT != null ? decodedJWT.getSubject() : null) == null)
+            throw new RuntimeException("decodeJWT invalido");
+        return decodedJWT;
     }
 
     @Override
@@ -58,8 +73,8 @@ public class JwtProviderImpl implements JwtProvider{
         try {
             String authorities = auth.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.joining());
-            Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
+                    .collect(Collectors.joining(","));
+            Algorithm algorithm = getAlgorithm();
             return JWT.create()
                     .withIssuer("Musagy dev")
                     .withSubject(auth.getUsername())
@@ -89,37 +104,51 @@ public class JwtProviderImpl implements JwtProvider{
     }
 
     @Override
+    public String getUsername(String token) {
+        if (token == null)
+            throw new RuntimeException();
+
+        DecodedJWT decodedJWT = null;
+        try {
+            Algorithm algorithm = getAlgorithm();
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer("Musagy dev")
+                    .build();
+
+            decodedJWT = verifier.verify(token);
+        } catch (JWTVerificationException exception){
+            System.out.println(exception.toString());
+        }
+        if ((decodedJWT != null ? decodedJWT.getSubject() : null) == null)
+            throw new RuntimeException("decodeJWT invalido");
+        return decodedJWT.getSubject();
+    }
+
+    @Override
     public Authentication getAuthentication(HttpServletRequest req) {
-        var claims = extractClaims(req);
+        var decodedJWT = extractClaims(req);
 
-        if (claims == null || claims.isEmpty()) return null;
-
-        String username = claims.get("sub").asString();
+        String username = decodedJWT.getSubject();
         if (username == null) return null;
 
-        Long userId = claims.get("userId").asLong();
-
-        Set<GrantedAuthority> authorities = Arrays
-                .stream(claims.get("roles").toString().split(","))
-                .map(SecurityUtils::convertToAuthority)
-                .collect(Collectors.toSet());
+        UserPrincipal user = (UserPrincipal) userDetailsService.loadUserByUsername(username);
 
         UserDetails userDetails = UserPrincipal.builder()
-                .username(username)
-                .authorities(authorities)
-                .id(userId)
+                .user(user.getUser())
+                .id(user.getId())
+                .username(user.getUsername())
+                .password(user.getPassword())
                 .build();
 
-        return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     @Override
     public boolean isTokenValid(HttpServletRequest req) {
-        var claims = extractClaims(req);
+        var decodedJWT = extractClaims(req);
 
-        if (claims == null || claims.isEmpty()) return false;
-
-        return !claims.get("exp").asDate().before(new Date());
+        return !decodedJWT.getExpiresAt().before(new Date());
     }
 
 }

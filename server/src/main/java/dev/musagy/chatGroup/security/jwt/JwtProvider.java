@@ -13,4 +13,6 @@ public interface JwtProvider {
     String generateToken(UserPrincipal auth);
 
     String generateToken(User user);
+
+    String getUsername(String token);
 }
