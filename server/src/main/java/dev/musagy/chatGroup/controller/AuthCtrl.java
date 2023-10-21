@@ -26,7 +26,7 @@ public class AuthCtrl {
 
     @PostMapping("/sign-in")
     public ResponseEntity<SignInOrSignUpResponse> signIn(@RequestBody @Valid SignInRequest req) {
-        SignInOrSignUpResponse res = authService.signIm(req);
+        SignInOrSignUpResponse res = authService.signIn(req);
         return ResponseEntity.ok(res);
     }
 }

@@ -22,7 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private UserService userService;
 
     @Override
-    public SignInOrSignUpResponse signIm(SignInRequest req) {
+    public SignInOrSignUpResponse signIn(SignInRequest req) {
         Authentication authToken = new UsernamePasswordAuthenticationToken(
                 req.usernameOrEmail(),
                 req.password()
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public SignInOrSignUpResponse signUp(SignUpRequest req) {
         userService.saveUser(req);
-        return signIm(new SignInRequest(
+        return signIn(new SignInRequest(
                 req.username(),
                 req.password())
         );
