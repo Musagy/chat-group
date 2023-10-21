@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class JwtProviderImpl implements JwtProvider{
@@ -74,6 +76,7 @@ public class JwtProviderImpl implements JwtProvider{
             String authorities = auth.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(","));
+
             Algorithm algorithm = getAlgorithm();
             return JWT.create()
                     .withIssuer("Musagy dev")
@@ -85,22 +88,6 @@ public class JwtProviderImpl implements JwtProvider{
         } catch (JWTCreationException ex) {
             throw new RuntimeException();
         }
-    }
-
-    @Override
-    public String generateToken(User user) {
-        Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
-
-        String authorities = Collections
-                .singletonList(user.getRole())
-                .toString();
-
-        return JWT.create()
-                .withSubject(user.getUsername())
-                .withClaim("roles", authorities)
-                .withClaim("userId", user.getId())
-                .withExpiresAt(generateExpires())
-                .sign(algorithm);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class SecurityConfig {
     private JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Bean
-    public AuthenticationManager authenticationManager () throws Exception {
+    public AuthenticationManager authenticationManager () {
 //        return config.getAuthenticationManager(); // Forma default
         return new CustomAuthenticationManager();
     }
