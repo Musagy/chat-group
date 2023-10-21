@@ -24,16 +24,28 @@ public class UserServiceImpl implements UserService {
         if (req.username().contains("@"))
             throw new ValidationException("El username no pude contener \"@\"");
 
-        if (findByEmail(req.email()).isPresent())
+        if (existsByEmail(req.email()))
             throw new ValidationException("El email \"" + req.email() + "\" ya esta en uso");
 
-        if (findByUsername(req.username()).isPresent())
+        if (existsByUsername(req.username()))
             throw new ValidationException("El username \"" + req.username() + "\" ya esta en uso");
 
         String passwordEncrypt = passwordEncoder.encode(req.password());
 
         return userRepository
                 .save(new User(req, passwordEncrypt));
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        Optional<User> userList = userRepository.findByUsername(username);
+        return userList.isPresent();
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        Optional<User> userList = userRepository.findByEmail(email);
+        return userList.isPresent();
     }
 
     @Override
