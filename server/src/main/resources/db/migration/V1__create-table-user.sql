@@ -1,7 +1,9 @@
-CREATE TABLE "user" (
-    id SERIAL PRIMARY KEY,
-    email varchar(100) NOT NULL UNIQUE,
-    username varchar(100) NOT NULL UNIQUE,
-    userAlias varchar(100),
-    password varchar(100) NOT NULL
+CREATE TABLE `user` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(100) NOT NULL UNIQUE,
+    `username` VARCHAR(100) NOT NULL UNIQUE,
+    `user_alias` VARCHAR(100),
+    `password` VARCHAR(100) NOT NULL,
+    `role` VARCHAR(10) DEFAULT 'USER',
+    PRIMARY KEY (`id`)
 );

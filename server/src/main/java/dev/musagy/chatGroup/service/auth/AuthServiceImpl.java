@@ -3,7 +3,6 @@ package dev.musagy.chatGroup.service.auth;
 import dev.musagy.chatGroup.model.user.SignInRequest;
 import dev.musagy.chatGroup.model.user.SignInOrSignUpResponse;
 import dev.musagy.chatGroup.model.user.SignUpRequest;
-import dev.musagy.chatGroup.model.user.User;
 import dev.musagy.chatGroup.security.UserPrincipal;
 import dev.musagy.chatGroup.security.jwt.JwtProvider;
 import dev.musagy.chatGroup.service.user.UserService;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authManager;
     @Autowired
     private JwtProvider jwtProvider;
     @Autowired
@@ -24,27 +23,23 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public SignInOrSignUpResponse signIm(SignInRequest req) {
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.usernameOrEmail(),req.password())
+        Authentication authToken = new UsernamePasswordAuthenticationToken(
+                req.usernameOrEmail(),
+                req.password()
         );
 
-        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
-        String jwt = jwtProvider.generateToken(userPrincipal);
+        UserPrincipal user = (UserPrincipal) authManager.authenticate(authToken).getPrincipal();
+        String jwt = jwtProvider.generateToken(user);
 
-        return new SignInOrSignUpResponse(userPrincipal.getUser(), jwt);
+        return new SignInOrSignUpResponse(jwt);
     }
 
     @Override
     public SignInOrSignUpResponse signUp(SignUpRequest req) {
-        User user = userService.saveUser(req);
-
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword())
+        userService.saveUser(req);
+        return signIm(new SignInRequest(
+                req.username(),
+                req.password())
         );
-
-        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
-        String jwt = jwtProvider.generateToken(userPrincipal);
-
-        return new SignInOrSignUpResponse(userPrincipal.getUser(), jwt);
     }
 }

@@ -3,16 +3,14 @@ version: "3.9"
 services:
   db:
     container_name: chat-group-db
-    image: postgres
+    image: mysql:latest
     environment:
-      - POSTGRES_DB=chat-group-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=chupapi1234
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    restart: always
+      - MYSQL_DATABASE=chat-group-db
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=chupapi1234
+      - MYSQL_ROOT_PASSWORD=chupapi1234
     ports:
-      - "5432:5432"
+      - "3306:3306"
 
   client:
     container_name: chat-group-client
@@ -37,6 +35,3 @@ services:
       - DB_PASSWORD=chupapi1234
     depends_on:
       - db
-
-volumes:
-  postgres:
