@@ -1,7 +1,10 @@
 package dev.musagy.chatGroup.model.user;
 
+import dev.musagy.chatGroup.model.chat.Chat;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -25,6 +28,10 @@ public class User {
     // Role (por defecto USER)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    // Relaciones Many to Many
+    @ManyToMany(mappedBy = "whiteList")
+    private Set<Chat> chats;
 
     public User(SignUpRequest user, String passwordEncrypt, Role role) {
         this.email = user.email();
