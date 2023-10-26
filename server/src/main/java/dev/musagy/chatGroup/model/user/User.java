@@ -29,10 +29,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // Relaciones Many to Many
-    @ManyToMany(mappedBy = "whiteList")
-    private Set<Chat> chats;
-
     public User(SignUpRequest user, String passwordEncrypt, Role role) {
         this.email = user.email();
         this.username = user.username();

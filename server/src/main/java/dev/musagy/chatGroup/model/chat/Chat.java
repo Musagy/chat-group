@@ -1,29 +1,23 @@
 package dev.musagy.chatGroup.model.chat;
 
-import dev.musagy.chatGroup.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "chat")
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Relaciones Many to Many
-
-    @OneToMany
-    @JoinTable(
-            name = "chat_user",
-            joinColumns = @JoinColumn(name = "chat_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> whiteList;
+    private String title;
+    private String description;
+    @Column(name = "owner_id")
+    private Long ownerId;
 }

@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 public interface UserService {
-    User saveUser(SignUpRequest req);
+    void saveUser(SignUpRequest req);
+    User findById(Long userId);
 
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
@@ -17,4 +18,5 @@ public interface UserService {
 
     @Transactional
     void changeRole(Role newRole, String username);
+
 }

@@ -4,6 +4,7 @@ import dev.musagy.chatGroup.model.user.Role;
 import dev.musagy.chatGroup.model.user.SignUpRequest;
 import dev.musagy.chatGroup.model.user.User;
 import dev.musagy.chatGroup.repository.UserRepository;
+import dev.musagy.chatGroup.security.error.ResourceNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,12 +16,12 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User saveUser(SignUpRequest req) {
+    public void saveUser(SignUpRequest req) {
         if (req.username().contains("@"))
             throw new ValidationException("El username no pude contener \"@\"");
 
@@ -32,35 +33,40 @@ public class UserServiceImpl implements UserService {
 
         String passwordEncrypt = passwordEncoder.encode(req.password());
 
-        return userRepository
-                .save(new User(req, passwordEncrypt));
+        userRepo.save(new User(req, passwordEncrypt));
+    }
+
+    @Override
+    public User findById(Long userId) {
+        return userRepo.findById(userId)
+                .orElseThrow(()-> new ResourceNotFoundException("No se encontró el Usuario de esta ID"));
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        Optional<User> userList = userRepository.findByUsername(username);
+        Optional<User> userList = userRepo.findByUsername(username);
         return userList.isPresent();
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        Optional<User> userList = userRepository.findByEmail(email);
+        Optional<User> userList = userRepo.findByEmail(email);
         return userList.isPresent();
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepo.findByUsername(username);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepo.findByEmail(email);
     }
 
     @Transactional
     @Override
     public void changeRole(Role newRole, String username){
-        userRepository.updateUserRole( username, newRole);
+        userRepo.updateUserRole( username, newRole);
     }
 }
