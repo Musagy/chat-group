@@ -120,7 +120,7 @@ public class JwtProviderImpl implements JwtProvider{
 
         UserPrincipal user = (UserPrincipal) userDetailsService.loadUserByUsername(username);
 
-        UserDetails userDetails = UserPrincipal.builder()
+        UserPrincipal userDetails = UserPrincipal.builder()
                 .user(user.getUser())
                 .id(user.getId())
                 .username(user.getUsername())
