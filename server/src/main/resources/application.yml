@@ -6,10 +6,13 @@ spring:
     password: ${DB_PASSWORD:chupapi1234}
     driverClassName: com.mysql.cj.jdbc.Driver
 
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
 
   # For Development
   jpa:
-    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
         format_sql: true

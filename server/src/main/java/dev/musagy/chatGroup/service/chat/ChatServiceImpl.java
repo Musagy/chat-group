@@ -9,6 +9,8 @@ import dev.musagy.chatGroup.security.error.InsufficientPrivilegesException;
 import dev.musagy.chatGroup.security.error.ResourceNotFoundException;
 import dev.musagy.chatGroup.service.user.UserService;
 import dev.musagy.chatGroup.utils.SecurityUtils;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,7 @@ public class ChatServiceImpl implements ChatService {
         return newChat;
     }
 
+    @Transactional
     @Override
     public void deleteChat(Long chatId, Long ownerId) {
         Chat chat = findByIdInServer(chatId);
@@ -51,6 +54,7 @@ public class ChatServiceImpl implements ChatService {
         if (!ownerId.equals(chat.getOwnerId()))
             throw new InsufficientPrivilegesException("Para eliminar este chat necesitas ser su creador");
 
+        cuRepo.clearMembersByChatId(chatId);
         chatRepo.deleteById(chatId);
     }
 
@@ -79,6 +83,9 @@ public class ChatServiceImpl implements ChatService {
     public ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
         validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
 
+        if (isMember(chatUserPK))
+            throw new EntityExistsException("El usuario ya es miembro de este chat");
+
         User user = userService.findById(chatUserPK.getUser());
         Chat chat = findByIdInServer(chatUserPK.getChat());
         ChatUser newRelationship = new ChatUser(user, chat, ChatRole.MEMBER);
@@ -95,6 +102,9 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void deleteMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
         validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
+
+        if (!isMember(chatUserPK))
+            throw new EntityNotFoundException("El usuario no es un miembro de este chat");
 
         cuRepo.deleteById(chatUserPK);
     }

@@ -10,6 +10,7 @@ public interface ChatService {
     Page<Chat> findChatsPageByUserId(long userId, Pageable pageable);
 
     Chat createChat(CreateChatRequest req, Long requesterId);
+    @Transactional
     void deleteChat(Long chatId, Long ownerId);
 
     Chat findById(Long chatId, Long userId);
