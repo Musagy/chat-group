@@ -31,9 +31,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (auth != null && jwtProvider.isTokenValid(req)) {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-        } catch ( RuntimeException e) {
-            System.out.println(e);
-        }finally {
+        } catch ( Exception ignored) {
+        } finally {
             filterChain.doFilter(req, res);
         }
     }
