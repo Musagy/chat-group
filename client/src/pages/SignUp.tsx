@@ -88,8 +88,7 @@ const SignUp = () => {
     e.preventDefault()
     if (formData.password !== confirmPassword)
       alert("la contraseña no es la misma")
-    // else
-    signInMutation.mutate(formData)
+    else signInMutation.mutate(formData)
   }
 
   return (
