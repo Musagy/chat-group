@@ -15,7 +15,7 @@ public interface ChatService {
 
     Chat findById(Long chatId, Long userId);
     @Transactional
-    Page<UserSummary> findUserSummariesPageByChatId(Long chatId, Pageable pageable);
+    Page<MemberSummary> findUserSummariesPageByChatId(Long chatId, Pageable pageable);
 
     // ChatUser Service
     ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId);

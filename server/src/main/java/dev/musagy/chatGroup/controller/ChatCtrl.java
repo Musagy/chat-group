@@ -65,13 +65,13 @@ public class ChatCtrl {
     }
 
     @GetMapping("/get-members/{chatId}")
-    public ResponseEntity<Page<UserSummary>> getMembersPage(
+    public ResponseEntity<Page<MemberSummary>> getMembersPage(
             @PathVariable Long chatId,
             @RequestParam int page
     ) {
         Pageable pageable = PageRequest.of(page,20);
 
-        Page<UserSummary> members =  chatService.findUserSummariesPageByChatId(chatId, pageable);
+        Page<MemberSummary> members =  chatService.findUserSummariesPageByChatId(chatId, pageable);
         return ResponseEntity.ok(members);
     }
 

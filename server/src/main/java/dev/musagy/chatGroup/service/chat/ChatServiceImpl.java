@@ -75,7 +75,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Transactional
     @Override
-    public Page<UserSummary> findUserSummariesPageByChatId(Long chatId, Pageable pageable) {
+    public Page<MemberSummary> findUserSummariesPageByChatId(Long chatId, Pageable pageable) {
         return chatRepo.findUserSummariesPageByChatId(chatId, pageable);
     }
 

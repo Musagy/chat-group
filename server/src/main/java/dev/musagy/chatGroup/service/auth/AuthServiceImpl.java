@@ -6,6 +6,7 @@ import dev.musagy.chatGroup.model.user.SignUpRequest;
 import dev.musagy.chatGroup.security.UserPrincipal;
 import dev.musagy.chatGroup.security.jwt.JwtProvider;
 import dev.musagy.chatGroup.service.user.UserService;
+import dev.musagy.chatGroup.utils.ObjectToRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
         UserPrincipal user = (UserPrincipal) authManager.authenticate(authToken).getPrincipal();
         String jwt = jwtProvider.generateToken(user);
 
-        return new SignInOrSignUpResponse(jwt);
+        return new SignInOrSignUpResponse(jwt, ObjectToRecord.userToUserSummary(user.getUser()));
     }
 
     @Override

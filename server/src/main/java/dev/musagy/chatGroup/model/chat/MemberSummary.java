@@ -2,7 +2,7 @@ package dev.musagy.chatGroup.model.chat;
 
 import jakarta.validation.constraints.NotNull;
 
-public record UserSummary(
+public record MemberSummary(
         @NotNull
         Long id,
         @NotNull
