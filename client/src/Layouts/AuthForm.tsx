@@ -1,14 +1,18 @@
 import { useSelector } from "react-redux"
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { selectCurrentToken } from "../features/auth/authSlice"
 import { useEffectOnce } from "usehooks-ts"
 
 const AuthForm = () => {
   const navigate = useNavigate()
   const token = useSelector(selectCurrentToken)
+  const location = useLocation()
 
   useEffectOnce(() => {
-    if (token) navigate("/")
+    if (token) {
+      const prevPathname = location.state?.from?.pathname || "/"
+      navigate(prevPathname)
+    }
   })
 
   return (

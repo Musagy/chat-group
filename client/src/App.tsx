@@ -7,9 +7,10 @@ import RootLayout from "./Layouts/RootLayout"
 import AuthForm from "./Layouts/AuthForm"
 import RequireAuth from "./Layouts/RequireAuth"
 import { useEffectOnce } from "usehooks-ts"
-import { setCredentials } from "./features/auth/authSlice"
+import { loadAuthSaved } from "./features/auth/authSlice"
 import { useDispatch } from "react-redux"
 import SignUp from "./pages/SignUp"
+import Layout from "./Layouts/Layout"
 
 function App() {
   return (
@@ -22,8 +23,7 @@ const Router = () => {
   const dispatch = useDispatch()
 
   useEffectOnce(() => {
-    const auth = localStorage.getItem("auth")
-    if (auth) dispatch(setCredentials(JSON.parse(auth)))
+    dispatch(loadAuthSaved())
   })
 
   return (
@@ -34,8 +34,10 @@ const Router = () => {
           <Route path="sign-up" element={<SignUp />} />
         </Route>
         <Route element={<RequireAuth />}>
-          <Route path="/" element={<Home />} />
-          <Route path="chat/:chatId" element={<Chat />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="chat/:chatId" element={<Chat />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>

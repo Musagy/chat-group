@@ -3,6 +3,7 @@ package dev.musagy.chatGroup.service.auth;
 import dev.musagy.chatGroup.model.user.SignInRequest;
 import dev.musagy.chatGroup.model.user.SignInOrSignUpResponse;
 import dev.musagy.chatGroup.model.user.SignUpRequest;
+import dev.musagy.chatGroup.model.user.User;
 import dev.musagy.chatGroup.security.UserPrincipal;
 import dev.musagy.chatGroup.security.jwt.JwtProvider;
 import dev.musagy.chatGroup.service.user.UserService;
@@ -42,5 +43,12 @@ public class AuthServiceImpl implements AuthService {
                 req.username(),
                 req.password())
         );
+    }
+
+    @Override
+    public SignInOrSignUpResponse validate(Long requesterId) {
+        User user = userService.findById(requesterId);
+        String jwt = jwtProvider.generateToken(user);
+        return new SignInOrSignUpResponse(jwt, null);
     }
 }

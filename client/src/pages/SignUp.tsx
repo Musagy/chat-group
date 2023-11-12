@@ -1,30 +1,12 @@
 import Form, { Field } from "../components/Form"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Email, SignUpAndSignInResponse, SignUpReq } from "../models/Requests"
 import { useMutation } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
 import { setCredentials } from "../features/auth/authSlice"
 import useChangeTitle from "../hooks/useChangeTitle"
 import { useNavigate } from "react-router-dom"
-
-const signInRequest = async (formData: SignUpReq) => {
-  const res = await fetch("http://localhost:8080/auth/sign-up", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-    method: "POST",
-  }).then(res => res.json())
-  return res
-}
-// interface SignInForm extends SignUpReq {
-//   email: string
-//   userAlias: string
-//   username: string
-//   password: string
-//   confirmPassword: string
-
-// }
+import { signUpRequest } from "../api/authRequest"
 
 const SignUp = () => {
   useChangeTitle("Inicio de sesión")
@@ -75,8 +57,8 @@ const SignUp = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const signInMutation = useMutation({
-    mutationFn: signInRequest,
+  const { mutate, error } = useMutation({
+    mutationFn: signUpRequest,
     onError: error => console.error("rejected", error),
     onSuccess: (data: SignUpAndSignInResponse) => {
       dispatch(setCredentials(data))
@@ -88,8 +70,12 @@ const SignUp = () => {
     e.preventDefault()
     if (formData.password !== confirmPassword)
       alert("la contraseña no es la misma")
-    else signInMutation.mutate(formData)
+    else mutate(formData)
   }
+
+  useEffect(() => {
+    if (error) alert(error)
+  }, [error])
 
   return (
     <Form

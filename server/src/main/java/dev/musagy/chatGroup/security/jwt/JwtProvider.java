@@ -11,6 +11,7 @@ public interface JwtProvider {
     boolean isTokenValid(HttpServletRequest req);
 
     String generateToken(UserPrincipal auth);
+    String generateToken(User User);
 
     String getUsername(String token);
 }

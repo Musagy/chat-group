@@ -1,22 +1,12 @@
 import Form, { Field } from "../components/Form"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { SignInReq, SignUpAndSignInResponse } from "../models/Requests"
 import { useMutation } from "@tanstack/react-query"
 import { useDispatch } from "react-redux"
 import { setCredentials } from "../features/auth/authSlice"
 import useChangeTitle from "../hooks/useChangeTitle"
 import { useNavigate } from "react-router-dom"
-
-const signInRequest = async (formData: SignInReq) => {
-  const res = await fetch("http://localhost:8080/auth/sign-in", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-    method: "POST",
-  }).then(res => res.json())
-  return res
-}
+import { signInRequest } from "../api/authRequest"
 
 const SignIn = () => {
   useChangeTitle("Inicio de sesión")
@@ -46,7 +36,7 @@ const SignIn = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const signInMutation = useMutation({
+  const { mutate, error } = useMutation({
     mutationFn: signInRequest,
     onError: error => console.error("rejected", error),
     onSuccess: (data: SignUpAndSignInResponse) => {
@@ -57,8 +47,11 @@ const SignIn = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    signInMutation.mutate(formData)
+    mutate(formData)
   }
+  useEffect(() => {
+    if (error) alert(error)
+  }, [error])
 
   return (
     <Form

@@ -5,7 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.musagy.chatGroup.model.user.User;
 import dev.musagy.chatGroup.security.CustomUserDetailsService;
@@ -18,7 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -70,24 +68,34 @@ public class JwtProviderImpl implements JwtProvider{
         return decodedJWT;
     }
 
-    @Override
-    public String generateToken(UserPrincipal auth)  {
+    private String generateTokenContent(String username, Long userId, String authorities) {
         try {
-            String authorities = auth.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.joining(","));
-
             Algorithm algorithm = getAlgorithm();
             return JWT.create()
                     .withIssuer("Musagy dev")
-                    .withSubject(auth.getUsername())
+                    .withSubject(username)
                     .withClaim("roles", authorities)
-                    .withClaim("userId", auth.getId())
+                    .withClaim("userId", userId)
                     .withExpiresAt(generateExpires())
                     .sign(algorithm);
         } catch (JWTCreationException ex) {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public String generateToken(UserPrincipal auth)  {
+        String authorities = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        return generateTokenContent(auth.getUsername(), auth.getId(), authorities);
+    }
+
+    @Override
+    public String generateToken(User user)  {
+        String authorities = user.getRole().name();
+        return generateTokenContent(user.getUsername(), user.getId(), authorities);
     }
 
     @Override
