@@ -1,5 +1,7 @@
 import { User } from "./User"
 
+// Auth Requests
+
 export interface SignInReq {
   usernameOrEmail: string
   password: string
@@ -16,4 +18,11 @@ export interface SignUpReq {
 export interface SignUpAndSignInResponse {
   user: User
   token: string
+}
+
+// Chat Requests
+
+export interface CreateChatReq {
+  title: string
+  description: string
 }
