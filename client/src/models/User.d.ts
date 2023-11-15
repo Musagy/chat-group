@@ -1,6 +1,6 @@
 export type Role = "USER" | "ADMIN"
 
-type ChatRole = "MEMBER" | "ADMIN" | "OWNER"
+export type ChatRole = "MEMBER" | "ADMIN" | "OWNER"
 
 interface AbstractUser {
   id: number
@@ -12,5 +12,5 @@ export interface User extends AbstractUser {
   role: Role
 }
 export interface Member extends AbstractUser {
-  chatRole: ChatRole
+  role: ChatRole
 }

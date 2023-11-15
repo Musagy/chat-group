@@ -1,14 +1,13 @@
-import { useOutletContext, useParams } from "react-router-dom"
+import { useOutletContext } from "react-router-dom"
 import useChangeTitle from "../hooks/useChangeTitle"
 import { ChatInfo } from "../models/ChatInfo"
 import { SendIcon } from "../assets/icons"
-import { useEffect } from "react"
 import Loading, { TextLoading } from "../components/states/Loading"
 
 function CreateMessageInput() {
   return (
     <label
-      htmlFor="msgInput flex-none"
+      htmlFor="msgInput"
       className="bg-msg_input p-[7px] flex gap-2 rounded-lg"
     >
       <input
@@ -26,11 +25,7 @@ function CreateMessageInput() {
 
 const Chat = () => {
   const { chatInfo } = useOutletContext() as { chatInfo: ChatInfo }
-  const { chatId } = useParams()
-  useChangeTitle("Chat " + chatId)
-  useEffect(() => {
-    console.log(chatInfo)
-  }, [chatInfo])
+  useChangeTitle(chatInfo?.title || "Cargando..")
   return (
     <>
       <section className="bg-chat_bg shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] h-[3.75rem] flex items-center px-[4.25rem]">

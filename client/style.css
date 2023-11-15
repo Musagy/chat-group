@@ -25,5 +25,24 @@
   @apply brightness-150 saturate-150;
 }
 .saturate-0.5:hover {
-  @apply brightness-[1.25] saturate-[1.25];
+  @apply brightness-[1.25] saturate-[1.25] bg-msg_input;
+}
+
+/* width */
+.customScroll::-webkit-scrollbar {
+  width: 15px;
+  margin: 5px;
+}
+
+/* Handle */
+.customScroll::-webkit-scrollbar-thumb {
+  border: solid 5px #0b090c;
+  border-radius: 10px;
+  background: #3c393f;
+}
+
+/* Handle on hover */
+.customScroll::-webkit-scrollbar-thumb:hover {
+  /* background: #555; */
+  background: #252329;
 }

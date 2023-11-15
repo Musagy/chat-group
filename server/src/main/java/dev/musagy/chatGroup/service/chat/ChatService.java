@@ -13,7 +13,7 @@ public interface ChatService {
     @Transactional
     void deleteChat(Long chatId, Long ownerId);
 
-    Chat findById(Long chatId, Long userId);
+    ChatWithRequesterRole findById(Long chatId, Long userId);
     @Transactional
     Page<MemberSummary> findUserSummariesPageByChatId(Long chatId, Pageable pageable);
 

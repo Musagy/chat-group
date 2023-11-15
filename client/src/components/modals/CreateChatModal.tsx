@@ -1,14 +1,25 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CreateChatReq } from "../../models/Requests"
 import { createChanger } from "../../utils/formatters"
+import { useMutation } from "@tanstack/react-query"
+import { createNewChat } from "../../api/chatRequests"
+import Loading from "../states/Loading"
+import { validateFormField } from "../../utils/validater"
+import { useDispatch } from "react-redux"
+import { closeModal } from "../../features/modal/modalSlice"
 
 function CreateChatModal() {
   const [formData, setFormData] = useState<CreateChatReq>({
     title: "",
     description: "",
   })
+  const dispatch = useDispatch()
   const submitHandler: React.FormEventHandler = e => {
     e.preventDefault()
+    if (validateFormField(formData)) {
+      mutate(formData)
+      dispatch(closeModal())
+    }
   }
   const { description: descChanger, title: titleChanger } = createChanger(
     formData,
@@ -18,8 +29,25 @@ function CreateChatModal() {
       title: 50,
     }
   )
+
+  const { mutate, status, error, data } = useMutation({
+    mutationFn: createNewChat,
+    onError: e => alert(e.message),
+  })
+  useEffect(() => {
+    console.log(error)
+    console.log(status)
+    // console.log(data)
+  }, [status, error, data])
+
   return (
     <>
+      {status === "pending" && (
+        <Loading
+          className="w-20 opacity-50"
+          ctnClassName="absolute h-full bg-aside_bg bg-opacity-30 top-0 left-0"
+        />
+      )}
       <h2>Nuevo Canal</h2>
       <form onSubmit={submitHandler} className="flex flex-col gap-6">
         <input
@@ -28,6 +56,7 @@ function CreateChatModal() {
           className="py-2 px-4 rounded-lg placeholder:text-msg_placeholder bg-msg_input"
           value={formData.title}
           onChange={titleChanger}
+          required
         />
         <TextArea
           placeholder="Descripción del Canal"
@@ -66,6 +95,7 @@ const TextArea = ({
       onChange={onChange}
       onInput={resize}
       className={className + " resize-none"}
+      required
     />
   )
 }

@@ -15,7 +15,7 @@ const Modal = () => {
           onClick={bgHandler}
           className="absolute bg-[rgb(18,15,19)] bg-opacity-50 w-full h-full"
         />
-        <div className="absolute bg-aside_bg px-11 py-8 rounded-3xl flex flex-col gap-6 max-w-[36rem] w-full font-bold text-lg">
+        <div className="absolute bg-aside_bg px-11 py-8 rounded-3xl flex flex-col gap-6 max-w-[36rem] w-full font-bold text-lg overflow-hidden">
           {currentModal == "createChat" && <CreateChatModal />}
         </div>
       </div>

@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static dev.musagy.chatGroup.utils.ObjectToRecord.addRequesterRoleInChat;
+
 @Service
 public class ChatServiceImpl implements ChatService {
     @Autowired
@@ -59,13 +61,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat findById(Long chatId, Long userId) {
+    public ChatWithRequesterRole findById(Long chatId, Long userId) {
         Chat chat = chatRepo.findById(chatId)
                 .orElseThrow(()-> new ResourceNotFoundException("No se encontró un chat con esta ID"));
 
-        permissionEvaluator(chatId, userId);
+        ChatRole memberRole = permissionEvaluator(chatId, userId);
 
-        return chat;
+        return addRequesterRoleInChat(chat, memberRole);
     }
 
     private Chat findByIdInServer(Long chatId) {
@@ -109,8 +111,12 @@ public class ChatServiceImpl implements ChatService {
         cuRepo.deleteById(chatUserPK);
     }
 
+    private ChatUser getMemberById(ChatUserPK chatUserPK) {
+        return cuRepo.findById(chatUserPK).orElseThrow(
+                () -> new ResourceNotFoundException("El usuario no es un miembro de este chat"));
+    }
     private boolean isMember(ChatUserPK chatUserPK) {
-        return cuRepo.findById(chatUserPK).isPresent();
+        return cuRepo.existsById(chatUserPK);
     }
 
     @Override
@@ -124,9 +130,7 @@ public class ChatServiceImpl implements ChatService {
             throw new IllegalArgumentException("Que haces chupapi, " +
                     "¿Quieres dejar al Chat sin propietario?");
 
-        ChatUser chatUser = cuRepo.findById(chatUserPK).
-                orElseThrow(() -> new ResourceNotFoundException("No se encontró al miembro"));
-
+        ChatUser chatUser = getMemberById(chatUserPK);
         chatUser.setRole(role);
 
         cuRepo.save(chatUser);
@@ -144,14 +148,18 @@ public class ChatServiceImpl implements ChatService {
             throw new InsufficientPrivilegesException("Necesitas un role " + minRole + " o superior");
     }
 
-    private void permissionEvaluator (Long chatId, Long userId){
-        boolean isMember = isMember(new ChatUserPK(userId, chatId));
+    private ChatRole permissionEvaluator (Long chatId, Long userId){
+        ChatUserPK pkId = new ChatUserPK(userId, chatId);
+        boolean isMember = isMember(pkId);
 
         if (!isMember) {
             Role userRole = SecurityUtils.getAuthenticatedRole();
 
             if (userRole == Role.USER)
                 throw new InsufficientPrivilegesException("No eres miembro de este chat");
+            return null;
+        } else {
+            return getMemberById(pkId).getRole();
         }
     }
 }

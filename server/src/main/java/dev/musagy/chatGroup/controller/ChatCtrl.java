@@ -24,7 +24,7 @@ public class ChatCtrl {
     @GetMapping("/get-chats") // init index is 0
     public ResponseEntity<Page<Chat>> getChatsPage (@RequestParam int page) {
         Long requesterId = SecurityUtils.getAuthenticatedUserId();
-        Pageable pageable = PageRequest.of(page,20);
+        Pageable pageable = PageRequest.of(page,10);
 
         Page<Chat> chats = chatService.findChatsPageByUserId(requesterId, pageable);
 
@@ -48,11 +48,11 @@ public class ChatCtrl {
     }
 
     @GetMapping("/{chatId}")
-    public ResponseEntity<Chat> getChatById(@PathVariable Long chatId) {
+    public ResponseEntity<ChatWithRequesterRole> getChatById(@PathVariable Long chatId) {
         Long requesterId = SecurityUtils.getAuthenticatedUserId();
 
-        Chat chat = chatService.findById(chatId, requesterId);
-        return ResponseEntity.ok(chat);
+        ChatWithRequesterRole chatWithRequesterRole = chatService.findById(chatId, requesterId);
+        return ResponseEntity.ok(chatWithRequesterRole);
     }
 
     @DeleteMapping("/{chatId}")

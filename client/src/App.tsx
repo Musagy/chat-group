@@ -6,9 +6,6 @@ import Chat from "./pages/Chat"
 import RootLayout from "./Layouts/RootLayout"
 import AuthForm from "./Layouts/AuthForm"
 import RequireAuth from "./Layouts/RequireAuth"
-import { useEffectOnce } from "usehooks-ts"
-import { loadAuthSaved } from "./features/auth/authSlice"
-import { useDispatch } from "react-redux"
 import SignUp from "./pages/SignUp"
 import Layout from "./Layouts/Layout"
 
@@ -20,12 +17,6 @@ function App() {
   )
 }
 const Router = () => {
-  const dispatch = useDispatch()
-
-  useEffectOnce(() => {
-    dispatch(loadAuthSaved())
-  })
-
   return (
     <Routes>
       <Route element={<RootLayout />}>

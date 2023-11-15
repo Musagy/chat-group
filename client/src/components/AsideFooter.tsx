@@ -1,6 +1,9 @@
+import { memo, useEffect } from "react"
 import { DownArrowIcon } from "../assets/icons"
 import { User } from "../models/User"
-import { getInitials } from "../utils/formatters"
+import { useSelector } from "react-redux"
+import { selectCurrentUser } from "../features/auth/authSlice"
+import UserItem from "./UserItem"
 
 const gradients: { from: string; to: string; textDark: boolean }[] = [
   {
@@ -54,38 +57,28 @@ const gradients: { from: string; to: string; textDark: boolean }[] = [
     textDark: false,
   },
 ]
-interface Props {
-  user: User
-}
 
-const AsideFooter = ({ user }: Props) => {
-  const { username, userAlias } = user
+const AsideFooter = memo(function () {
+  const user = useSelector(selectCurrentUser) as User
 
   const randomIndex = Math.floor(Math.random() * gradients.length)
 
-  const pfp = getInitials(
-    username.length === 0 ? username ?? "a" : userAlias ?? "b"
-  )
-
   const bg = gradients[randomIndex]
+  useEffect(() => {
+    console.log("hola")
+  })
   return (
-    <footer className="bg-aside_bg bg-opacity-50 h-[75px] absolute bottom-[-75px] w-full flex items-center gap-5 px-4 content-center">
-      <picture
-        className={`row-start-1 row-end-3 bg-gradient-to-tr
-            ${bg.from} ${bg.to}
-            font-bold h-[42px] w-[42px]
-            ${bg.textDark ? "text-chat_bg" : "text-white"}
-            grid place-items-center text-2xl rounded-lg 
-            `}
+    <footer className="bg-aside_bg bg-opacity-50 h-[75px] bottom-[-75px] w-full flex items-center gap-5 px-4 content-center">
+      <UserItem
+        className={`bg-gradient-to-tr ${bg.from} ${bg.to} ${
+          bg.textDark ? "text-chat_bg" : "text-white"
+        }`}
+        user={user}
       >
-        {pfp}
-      </picture>
-      <section className="flex flex-col grow">
-        <h2 className="text-white">{userAlias}</h2>
-        <p className="text-msg_placeholder text-xs">@{username}</p>
-      </section>
-      <DownArrowIcon className="w-5" />
+        <DownArrowIcon className="w-5" />
+      </UserItem>
     </footer>
   )
-}
+})
+
 export default AsideFooter

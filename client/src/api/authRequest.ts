@@ -20,8 +20,9 @@ export const signUpRequest = async (formData: SignUpReq) => {
 }
 
 export const tokenValidate = async () => {
-  const chatsPage = await fetch(`${API}/auth/validate`, {
-    headers: getAuthHeader(),
+  const getAuth = getAuthHeader()
+  const res = await fetch(`${API}/auth/validate`, {
+    headers: getAuth,
   }).then(data => data.json())
-  return chatsPage
+  return res
 }

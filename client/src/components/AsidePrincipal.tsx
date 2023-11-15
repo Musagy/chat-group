@@ -18,33 +18,33 @@ const AsidePrincipal = ({ chatHandler }: Props) => {
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounce<string>(search, 1000)
 
-  const { data, error, status, refetch } = useInfiniteQuery({
-    queryKey: ["chats"],
-    queryFn: e => getChatsPage(e, search),
-    initialPageParam: 0,
-    getNextPageParam: lastPage => lastPage.nextCursor,
-  })
+  const { data, error, status, refetch, fetchNextPage, isFetching } =
+    useInfiniteQuery({
+      queryKey: ["chats"],
+      queryFn: e => getChatsPage(e, search),
+      initialPageParam: 0,
+      getNextPageParam: lastPage => !lastPage.last && lastPage.number + 1,
+    })
+
   useEffect(() => {
-    // if (debouncedSearch)
-    refetch()
-    console.log("se esta refrescando el chat")
+    if (debouncedSearch) {
+      refetch()
+      console.log("se esta refrescando el chat")
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch])
 
-  // useEffect(() => {
-  //   console.log(status)
-  //   console.log(data)
-  //   console.log(error)
-  //   console.log(isFetching)
-  // }, [data, error, isFetching, status])
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   return (
-    <section className="grid grid-rows-[60px_1fr] h-full">
+    <section className="row-start-1 grid grid-rows-[60px_1fr] max-h-[calc(100vh-75px)]">
       <header className="flex justify-between items-center px-4">
         <h1 className="text-[18px] font-bold text-white">Canales</h1>
         <CreateChatBtn />
       </header>
-      {status === "pending" && <Loading />}
+      {status === "pending" && <Loading className="w-20 opacity-50" />}
       {status === "error" && <Error err={error} />}
       {status === "success" && (
         <>
@@ -54,6 +54,8 @@ const AsidePrincipal = ({ chatHandler }: Props) => {
               setSearch={setSearch}
               pages={data.pages}
               chatHandler={chatHandler}
+              isFetching={isFetching}
+              fetchNextPage={fetchNextPage}
             />
           ) : (
             <NoChatsMessage />
