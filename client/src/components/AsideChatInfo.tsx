@@ -27,7 +27,7 @@ export default function AsideChatInfo({ chatInfo, isOpen, setIsOpen }: Props) {
         </button>
         <p className="text-lg font-bold">Todos los Canales</p>
       </header>
-      <main className="max-h-[135px] h-full flex flex-col gap-9 mt-5">
+      <main className="max-h-[calc(100vh-75px-60px)] h-full flex flex-col gap-9 pt-5 overflow-y-auto customScroll">
         <section className="flex flex-col gap-3">
           <h2 className="font-bold text-lg">{title.toUpperCase()}</h2>
           <p className="text-lg">
@@ -38,7 +38,7 @@ export default function AsideChatInfo({ chatInfo, isOpen, setIsOpen }: Props) {
           </p>
           {requesterRole != "MEMBER" && (
             <div className="flex justify-between items-center">
-              <p className="font-bold text-lg text-msg_placeholder">Rol:</p>
+              <p className="font-bold text-lg text-msg_placeholder">Tu Role:</p>
               <RoleBox role={requesterRole} />
             </div>
           )}
@@ -49,7 +49,10 @@ export default function AsideChatInfo({ chatInfo, isOpen, setIsOpen }: Props) {
             queryKey={["member", id.toString()]}
             queryFn={e => getMembersPage(e, id)}
             itemRender={(member: Member) => (
-              <li className="bg-aside_bg bg-opacity-50 h-[60px] bottom-[-75px] w-full flex items-center gap-5  content-center">
+              <li
+                className="bg-aside_bg bg-opacity-50 h-[60px] bottom-[-75px] w-full flex items-center gap-5  content-center"
+                key={member.id}
+              >
                 <UserItem
                   key={member.id}
                   user={member}

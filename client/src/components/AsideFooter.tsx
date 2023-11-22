@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react"
+import { memo } from "react"
 import { DownArrowIcon } from "../assets/icons"
 import { User } from "../models/User"
 import { useSelector } from "react-redux"
@@ -64,9 +64,6 @@ const AsideFooter = memo(function () {
   const randomIndex = Math.floor(Math.random() * gradients.length)
 
   const bg = gradients[randomIndex]
-  useEffect(() => {
-    console.log("hola")
-  })
   return (
     <footer className="bg-aside_bg bg-opacity-50 h-[75px] bottom-[-75px] w-full flex items-center gap-5 px-4 content-center">
       <UserItem

@@ -27,16 +27,9 @@ const AsidePrincipal = ({ chatHandler }: Props) => {
     })
 
   useEffect(() => {
-    if (debouncedSearch) {
-      refetch()
-      console.log("se esta refrescando el chat")
-    }
+    if (debouncedSearch) refetch()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch])
-
-  useEffect(() => {
-    console.log(data)
-  }, [data])
 
   return (
     <section className="row-start-1 grid grid-rows-[60px_1fr] max-h-[calc(100vh-75px)]">

@@ -33,6 +33,7 @@ public class SecurityConfig {
         http.sessionManagement(SM -> SM.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(authorizationRequests -> authorizationRequests
                 .requestMatchers(HttpMethod.GET, "/").permitAll()
+                .requestMatchers("/msg/**").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);

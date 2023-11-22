@@ -3,6 +3,7 @@ package dev.musagy.chatGroup.utils;
 import dev.musagy.chatGroup.model.user.Role;
 import dev.musagy.chatGroup.security.UserPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -22,13 +23,21 @@ public class SecurityUtils {
     }
     public static String extractAuthTokenFromRequest(HttpServletRequest req) {
         String bearerToken = req.getHeader(AUTH_HEADER);
+        return extractAuthToken(bearerToken);
+    }
+    public static String extractAuthTokenFromAccessor(StompHeaderAccessor accessor) {
+        String bearerToken = accessor.getFirstNativeHeader(AUTH_HEADER);
+        return extractAuthToken(bearerToken);
+    }
+    public static String extractAuthToken(String bearerToken) {
         if(StringUtils.hasLength(bearerToken) && bearerToken.startsWith(AUTH_TOKEN_PREFIX)) {
             return bearerToken.substring(7);
         }
         return null;
     }
     public static UserPrincipal getAuthenticatedUser() {
-        return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        return (UserPrincipal) auth.getPrincipal();
     }
     public static Long getAuthenticatedUserId() {
         return getAuthenticatedUser().getId();

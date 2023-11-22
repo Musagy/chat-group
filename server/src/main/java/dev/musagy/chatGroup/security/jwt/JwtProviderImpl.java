@@ -13,10 +13,10 @@ import dev.musagy.chatGroup.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class JwtProviderImpl implements JwtProvider{
@@ -45,9 +44,17 @@ public class JwtProviderImpl implements JwtProvider{
 
     private DecodedJWT extractClaims(HttpServletRequest req) {
         String token = SecurityUtils.extractAuthTokenFromRequest(req);
-
         return decodeToken(token);
     }
+    private DecodedJWT extractClaims(StompHeaderAccessor accessor) {
+        String token = SecurityUtils.extractAuthTokenFromAccessor(accessor);
+        return decodeToken(token);
+    }
+    private DecodedJWT extractClaims(String bearertoken) {
+        String token = SecurityUtils.extractAuthToken(bearertoken);
+        return decodeToken(token);
+    }
+
     private DecodedJWT decodeToken(String token) {
         if (token == null)
             throw new RuntimeException();
@@ -119,10 +126,7 @@ public class JwtProviderImpl implements JwtProvider{
         return decodedJWT.getSubject();
     }
 
-    @Override
-    public Authentication getAuthentication(HttpServletRequest req) {
-        var decodedJWT = extractClaims(req);
-
+    public Authentication getAuthenticationBase(DecodedJWT decodedJWT) {
         String username = decodedJWT.getSubject();
         if (username == null) return null;
 
@@ -135,8 +139,25 @@ public class JwtProviderImpl implements JwtProvider{
                 .password(user.getPassword())
                 .build();
 
-
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    @Override
+    public Authentication getAuthentication(HttpServletRequest req) {
+        DecodedJWT token = extractClaims(req);
+        return getAuthenticationBase(token);
+    }
+
+    @Override
+    public Authentication getAuthenticationForWebSocket(StompHeaderAccessor accessor) {
+        DecodedJWT token = extractClaims(accessor);
+        return getAuthenticationBase(token);
+    }
+
+    @Override
+    public Authentication getAuthenticationByString(String header) {
+        DecodedJWT token = extractClaims(header);
+        return getAuthenticationBase(token);
     }
 
     @Override

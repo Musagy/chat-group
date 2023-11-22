@@ -24,10 +24,7 @@ function ChatBrowser({
 }: Props) {
   const { chatId } = useParams()
   const loaderOnView = (inView: boolean) => {
-    console.log("isFetching: " + isFetching)
-    console.log("inView: " + inView)
     if (!isFetching && inView) {
-      console.log("cargando post")
       fetchNextPage()
     }
   }

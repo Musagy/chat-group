@@ -54,7 +54,6 @@ export function LoadingWithInView({
 }) {
   const { ref, inView } = useInView()
   useEffect(() => {
-    console.log(inView)
     onView(inView)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView])

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { CreateChatReq } from "../../models/Requests"
 import { createChanger } from "../../utils/formatters"
 import { useMutation } from "@tanstack/react-query"
@@ -30,15 +30,10 @@ function CreateChatModal() {
     }
   )
 
-  const { mutate, status, error, data } = useMutation({
+  const { mutate, status } = useMutation({
     mutationFn: createNewChat,
     onError: e => alert(e.message),
   })
-  useEffect(() => {
-    console.log(error)
-    console.log(status)
-    // console.log(data)
-  }, [status, error, data])
 
   return (
     <>

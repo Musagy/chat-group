@@ -1,6 +1,5 @@
 package dev.musagy.chatGroup.model.chat;
 
-
 public record ChatWithRequesterRole(
         Long id,
         String title,
