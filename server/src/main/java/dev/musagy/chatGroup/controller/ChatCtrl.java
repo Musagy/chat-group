@@ -76,9 +76,9 @@ public class ChatCtrl {
     }
 
     @PostMapping("/add-member")
-    public ResponseEntity<ChatUser> addMember(@Valid @RequestBody ChatUserPK req) {
+    public ResponseEntity<ChatUser> addMember(@Valid @RequestBody AddMemberRequest req) {
         Long requesterId = SecurityUtils.getAuthenticatedUserId();
-        ChatUser newMember = chatService.addMemberByCUPK(req, requesterId);
+        ChatUser newMember = chatService.addMemberByUsernameAndChatId(req.chatId(), req.username(), requesterId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
     }

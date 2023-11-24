@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-type modalStates = null | "createChat"
+type modalStates = null | "createChat" | "addMember" | "deleteChat"
 const initialState: { value: modalStates } = { value: null }
 
 const modalSlice = createSlice({

@@ -19,6 +19,7 @@ public interface ChatService {
 
     // ChatUser Service
     ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId);
+    ChatUser addMemberByUsernameAndChatId(Long chatId, String username, Long requesterId);
     void deleteMemberByCUPK(ChatUserPK chatUserPK, Long requesterId);
 
     void addOwner(ChatUser chatUser);

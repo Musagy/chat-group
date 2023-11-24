@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,18 +82,30 @@ public class ChatServiceImpl implements ChatService {
         return chatRepo.findUserSummariesPageByChatId(chatId, pageable);
     }
 
-    @Override
-    public ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
-        validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
-
-        if (isMember(chatUserPK))
+    private ChatUser addMember(Long chatId, User user) {
+        if (isMember(new ChatUserPK(user.getId(), chatId)))
             throw new EntityExistsException("El usuario ya es miembro de este chat");
 
-        User user = userService.findById(chatUserPK.getUser());
-        Chat chat = findByIdInServer(chatUserPK.getChat());
+        Chat chat = findByIdInServer(chatId);
         ChatUser newRelationship = new ChatUser(user, chat, ChatRole.MEMBER);
 
         return cuRepo.save(newRelationship);
+    }
+
+    @Override
+    public ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
+        validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
+        return addMember(chatUserPK.getChat(), userService.findById(chatUserPK.getUser()));
+    }
+
+    @Override
+    public ChatUser addMemberByUsernameAndChatId(Long chatId, String username, Long requesterId) {
+        validateRequesterAuthorization(requesterId, chatId, ChatRole.ADMIN);
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "El usuario no fue encontrado: " + username
+                ));
+        return addMember(chatId, user);
     }
 
     @Override

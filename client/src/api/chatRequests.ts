@@ -1,5 +1,5 @@
 import { ChatInfoWithMemberRole } from "../models/ChatInfo"
-import { CreateChatReq } from "../models/Requests"
+import { AddNewMember, CreateChatReq } from "../models/Requests"
 import { API, getAuthHeader } from "../utils/getItems"
 
 export const getChatsPage = async (
@@ -48,4 +48,19 @@ export const getMembersPage = async (
     { headers: getAuthHeader() }
   ).then(data => data.json())
   return chatsPage
+}
+
+export const addNewMember = async (formData: AddNewMember) => {
+  const newChat = await fetch(`${API}/chat/add-member`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(formData),
+    method: "POST",
+  }).then(async data => {
+    if (data.status === 400) throw new Error(await data.text())
+    return data.json()
+  })
+  return newChat
 }
