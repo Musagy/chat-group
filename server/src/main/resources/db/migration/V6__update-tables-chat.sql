@@ -1,0 +1,2 @@
+ALTER TABLE chat
+    ADD COLUMN is_active BOOLEAN DEFAULT TRUE;

@@ -42,7 +42,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat createChat(CreateChatRequest req, Long requesterId) {
-        Chat requestChat = new Chat(null, req.title(), req.description(), requesterId);
+        Chat requestChat = new Chat(null, req.title(), req.description(), requesterId, true);
         Chat newChat = chatRepo.save(requestChat);
         User user = SecurityUtils.getAuthenticatedUser().getUser();
         addOwner(new ChatUser(user, newChat, null));
@@ -57,8 +57,7 @@ public class ChatServiceImpl implements ChatService {
         if (!ownerId.equals(chat.getOwnerId()))
             throw new InsufficientPrivilegesException("Para eliminar este chat necesitas ser su creador");
 
-        cuRepo.clearMembersByChatId(chatId);
-        chatRepo.deleteById(chatId);
+        chatRepo.deactivateChatById(chatId);
     }
 
     @Override
@@ -67,6 +66,9 @@ public class ChatServiceImpl implements ChatService {
                 .orElseThrow(()-> new ResourceNotFoundException("No se encontró un chat con esta ID"));
 
         ChatRole memberRole = permissionEvaluator(chatId, userId);
+
+        if (!chat.isActive() && memberRole != null)
+            throw new ResourceNotFoundException("No se encontró un chat con esta ID");
 
         return addRequesterRoleInChat(chat, memberRole);
     }

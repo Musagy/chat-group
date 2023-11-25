@@ -32,12 +32,14 @@ const Message = ({ message, isYours }: Props) => {
       <Pfp name={name} className="bg-[#1c1b1f]" />
       <section className="flex flex-col gap-1">
         <section
-          className={"flex gap-3 items-end " + (isYours && "flex-row-reverse")}
+          className={
+            "flex gap-3 items-center " + (isYours && "flex-row-reverse")
+          }
         >
           <h2 className={"text-lg font-bold " + textColorArray[role]}>
             {name}
           </h2>
-          <span className="text-sm font-medium text-msg_placeholder">
+          <span className="text-sm font-medium text-msg_placeholder mt-1">
             {sentAtFormatted}
           </span>
         </section>

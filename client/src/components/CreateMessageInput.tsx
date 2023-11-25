@@ -14,7 +14,7 @@ export default function CreateMessageInput({ sendMessage }: Props) {
   const formHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (msgContent !== "") {
-      sendMessage({ content: msgContent })
+      sendMessage({ content: msgContent, type: "SEND_MESSAGE" })
       setMsgContent("")
     }
   }

@@ -31,8 +31,12 @@ const Layout = () => {
   const { status, mutate, data } = chatInfoMutable
 
   useEffect(() => {
-    if (chatId) mutate(chatId)
-    setIsOpenChatInfoAside(true)
+    if (chatId) {
+      mutate(chatId)
+      setIsOpenChatInfoAside(true)
+    } else {
+      setIsOpenChatInfoAside(false)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId])
 

@@ -64,3 +64,10 @@ export const addNewMember = async (formData: AddNewMember) => {
   })
   return newChat
 }
+
+export const deleteChat = async (chatId: number) => {
+  await fetch(`${API}/chat/${chatId}`, {
+    headers: getAuthHeader(),
+    method: "DELETE",
+  })
+}

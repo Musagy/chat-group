@@ -49,6 +49,7 @@ const AddMemberModal = () => {
           <span className="text-white">@</span>
           <input
             id="newMember"
+            name="newMember"
             placeholder="username"
             required
             className="flex-1 bg-[#0000] font-medium placeholder:text-msg_placeholder"

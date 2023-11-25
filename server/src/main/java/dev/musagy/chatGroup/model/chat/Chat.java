@@ -20,4 +20,6 @@ public class Chat {
     private String description;
     @Column(name = "owner_id")
     private Long ownerId;
+    @Column(name = "is_active")
+    private boolean isActive;
 }

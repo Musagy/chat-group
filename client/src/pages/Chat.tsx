@@ -1,15 +1,18 @@
-import { useOutletContext } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom"
 import useChangeTitle from "../hooks/useChangeTitle"
 import { ChatInfoWithMemberRole } from "../models/ChatInfo"
 import Loading from "../components/states/Loading"
-import useReactQuerySubscription from "../hooks/useReactQuerySubcription"
+import useReactQuerySubscription from "../hooks/useMessageWebSocketSubscription"
 import { useEffect, useState } from "react"
 import MessagesCtn from "../components/MessageCtn"
 import CreateMessageInput from "../components/CreateMessageInput"
 import { Message } from "../models/Message"
 import ChatHeader from "../components/ChatHeader"
+import { useQueryClient } from "@tanstack/react-query"
 
 const Chat = () => {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { chatInfo } = useOutletContext() as {
     chatInfo?: ChatInfoWithMemberRole
   }
@@ -24,7 +27,9 @@ const Chat = () => {
     chatInfo?.id || null,
     (newMessage: Message) => {
       setNewMessages(preValue => [newMessage, ...preValue])
-    }
+    },
+    navigate,
+    queryClient
   )
   return (
     <>

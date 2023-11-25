@@ -2,6 +2,7 @@ import { ChatRole } from "./User"
 
 interface MessageAbstract {
   content: string
+  type: MessageType
 }
 export interface Message extends MessageAbstract {
   id: number

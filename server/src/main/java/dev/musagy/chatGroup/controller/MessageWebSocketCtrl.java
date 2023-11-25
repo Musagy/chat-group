@@ -2,6 +2,7 @@ package dev.musagy.chatGroup.controller;
 
 import dev.musagy.chatGroup.config.PreSendMessage;
 import dev.musagy.chatGroup.model.message.MessageWithUserInfo;
+import dev.musagy.chatGroup.model.message.MessageWithUserInfoAndMsgType;
 import dev.musagy.chatGroup.service.message.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -18,7 +19,7 @@ public class MessageWebSocketCtrl {
 
     @MessageMapping("/msgTo/{chatId}")
     @SendTo("/topic/{chatId}")
-    public MessageWithUserInfo sendMessage(
+    public MessageWithUserInfoAndMsgType sendMessage(
             @Payload PreSendMessage<?> payload,
             @DestinationVariable Long chatId
     ) {
