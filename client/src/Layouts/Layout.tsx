@@ -36,6 +36,7 @@ const Layout = () => {
     if (chatId) {
       mutate(chatId)
       setIsOpenChatInfoAside(true)
+      setIsOpenAside(false)
     } else {
       setIsOpenChatInfoAside(false)
     }
@@ -47,7 +48,7 @@ const Layout = () => {
       <aside
         className={
           "bg-aside_bg absolute md:relative grid grid-rows-[1fr_75px] h-screen w-[calc(100vw-4rem)] md:w-full " +
-          (isOpenAside && "-translate-x-[calc(100vw-4rem)] md:translate-x-0")
+          (!isOpenAside && "-translate-x-[calc(100vw-4rem)] md:translate-x-0")
         }
       >
         <AsidePrincipal chatHandler={chatHandler} />
@@ -64,7 +65,7 @@ const Layout = () => {
         className="md:hidden inline absolute w-7 p-1 right-5 top-4 bg-aside_bg rounded-md "
         onClick={() => setIsOpenAside(prev => !prev)}
       >
-        {isOpenAside ? <MenuIcon /> : <CancelIcon />}
+        {!isOpenAside ? <MenuIcon /> : <CancelIcon />}
       </button>
       <main className="bg-chat_bg grid grid-rows-[auto_1fr]">
         <Outlet context={{ chatInfo: data }} />

@@ -120,15 +120,17 @@ public class ChatServiceImpl implements ChatService {
     public void deleteMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
         validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
 
-        if (!isMember(chatUserPK))
-            throw new EntityNotFoundException("El usuario no es un miembro de este chat");
+        ChatUser member = getMemberById(chatUserPK);
+
+        if (ChatRole.MEMBER.equals(member.getRole()))
+            throw new InsufficientPrivilegesException("Este usuario no es un simple miembro del chat");
 
         cuRepo.deleteById(chatUserPK);
     }
 
     private ChatUser getMemberById(ChatUserPK chatUserPK) {
         return cuRepo.findById(chatUserPK).orElseThrow(
-                () -> new ResourceNotFoundException("El usuario no es un miembro de este chat"));
+                () -> new EntityNotFoundException("El usuario no es un miembro de este chat"));
     }
     private boolean isMember(ChatUserPK chatUserPK) {
         return cuRepo.existsById(chatUserPK);
