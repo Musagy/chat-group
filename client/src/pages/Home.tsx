@@ -11,7 +11,7 @@ const Home = () => {
   const preChatHandler = (ch: ChatHistory) => navigate(ch[1])
   return (
     <main className="flex flex-col justify-center items-center h-screen gap-4 max-h-screen overflow-y-auto">
-      <h2 className="text-7xl font-bold text-white tracking-tighter mt-48">
+      <h2 className="text-7xl font-bold text-white tracking-tighter mt-48 text-center mx-6">
         Chat Grupal
       </h2>
       <p className="text-3xl font-semibold text-[#666070] max-w-[190px] text-center">
