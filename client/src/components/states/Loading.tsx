@@ -87,7 +87,7 @@ export function LoadingApp({ visible }: { visible: boolean }) {
         Chat Grupal
       </h2>
       <p className="animate-pulse text-2xl font-semibold text-msg_input max-w-[150px] text-center">
-        Para todo los chupapis
+        ¡Para todo!
       </p>
       <p className="absolute bottom-2 text-msg_input text-lg">
         Creado por <span className="font-bold saturate-200">Musagy</span>

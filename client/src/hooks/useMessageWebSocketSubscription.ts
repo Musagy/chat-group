@@ -49,6 +49,7 @@ const useMessageWebSocketSubscription = (
     if (!chatId) return
     const socket = new SockJS(APIForWS)
     stompClient.current = Stomp.over(socket)
+    stompClient.current.debug = () => {}
     stompClient.current.connect(getAuthHeader(), () => {
       if (!stompClient.current) {
         console.log("No se pudo conectar")

@@ -9,6 +9,8 @@ import CreateMessageInput from "../components/CreateMessageInput"
 import { Message } from "../models/Message"
 import ChatHeader from "../components/ChatHeader"
 import { useQueryClient } from "@tanstack/react-query"
+import { useDispatch } from "react-redux"
+import { setNewChatInHistory } from "../features/auth/authSlice"
 
 const Chat = () => {
   const navigate = useNavigate()
@@ -18,9 +20,18 @@ const Chat = () => {
   }
   useChangeTitle(chatInfo?.title || "Cargando..")
   const [newMessages, setNewMessages] = useState<Message[]>([])
+  const dispatch = useDispatch()
 
   useEffect(() => {
+    if (chatInfo) {
+      dispatch(
+        setNewChatInHistory({
+          newChatHistory: [chatInfo.title, `/chat/${chatInfo.id}`],
+        })
+      )
+    }
     setNewMessages([])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatInfo])
 
   const { sendMessage } = useReactQuerySubscription(
