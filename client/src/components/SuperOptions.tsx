@@ -31,7 +31,7 @@ const SuperOptions = ({
   return (
     <div
       className={
-        "bg-white absolute right-0 hidden group-hover/member:flex flex-col gap-2 p-2 rounded-lg z-[3] items-center decoration " +
+        "bg-chat_bg absolute right-px hidden group-hover/member:flex flex-col p-3 rounded-lg z-[3] items-center decoration shadow-[0px_0px_0px_1px_rgba(60,57,63,1)] " +
         (!inBottom
           ? "bottom-[60px] hidden decoration-top"
           : "top-[60px] decoration-bottom")
@@ -39,7 +39,7 @@ const SuperOptions = ({
     >
       <Btn
         text="Eliminar miembro"
-        className="bg-[#cc4f4f]"
+        className="hover:bg-red text-red"
         onClick={deleteMember}
       />
       {requesterRole === "OWNER" && (
@@ -47,11 +47,15 @@ const SuperOptions = ({
           {member.role === "ADMIN" ? (
             <Btn
               text="Quitar Admin"
-              className="bg-msg_input"
+              className="hover:bg-msg_input text-msg_input"
               onClick={toggleRole}
             />
           ) : (
-            <Btn text="Darle Admin" className="bg-blue" onClick={toggleRole} />
+            <Btn
+              text="Darle Admin"
+              className="hover:bg-blue text-blue"
+              onClick={toggleRole}
+            />
           )}
         </>
       )}
@@ -69,7 +73,10 @@ const Btn = ({
   onClick?: () => void
 }) => (
   <button
-    className={className + " unsaturate rounded-md py-0.5 px-2 w-full after"}
+    className={
+      className +
+      " unsaturate rounded-md py-0.5 px-2 w-full after hover:text-white"
+    }
     onClick={onClick}
   >
     {text}

@@ -61,24 +61,31 @@
   background: #828282;
 }
 .decoration::after {
-  --height: 12px;
+  --height: 24px;
+  --col: #252329;
   content: "";
   position: absolute;
   /* background-color: ; */
   width: var(--height);
-  height: var(--height);
+  height: calc(var(--height) / 2);
   right: 24px;
 
-  border-right: var(--height) solid transparent;
-  border-left: var(--height) solid transparent;
+  box-shadow: 0px 0px 0px 1px rgba(60, 57, 63, 1);
+  background-color: var(--col);
+
+  /* border-right: var(--height) solid transparent; */
+  /* border-left: var(--height) solid transparent; */
 }
 .decoration-top::after {
-  bottom: calc(var(--height) * -2 + 2px);
-  border-bottom: var(--height) solid transparent;
-  border-top: var(--height) solid #e0e0e0;
+  bottom: calc(var(--height) * -0.5 + 2px);
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+
+  /* border-bottom: var(--height) solid transparent; */
+  /* border-top: var(--height) solid var(--col); */
 }
 .decoration-bottom::after {
-  top: calc(var(--height) * -2 + 2px);
-  border-top: var(--height) solid transparent;
-  border-bottom: var(--height) solid #e0e0e0;
+  top: calc(var(--height) * -0.5 + 2px);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  /* border-top: var(--height) solid transparent;
+  border-bottom: var(--height) solid var(--col); */
 }

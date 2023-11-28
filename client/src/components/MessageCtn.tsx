@@ -32,7 +32,7 @@ const MessagesCtn = ({ chatId, newMessages }: Props) => {
       {status === "error" && <Error err={error} />}
       {status === "success" && (
         <PaginatedList
-          className="flex-col-reverse max-h-[calc(100vh-40px-60px-54px)] py-5 gap-9 pr-4 customScroll-2"
+          className="flex-col-reverse max-h-[calc(100vh-40px-60px-54px)] py-5 gap-9 pr-4 customScroll-2 overflow-y-auto customScroll"
           itemRender={(message: MessageType) => (
             <Message key={message.id} message={message} />
           )}

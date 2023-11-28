@@ -5,7 +5,8 @@ import { ChatInfoWithMemberRole } from "../models/ChatInfo"
 import { TextLoading } from "./states/Loading"
 
 const ChatHeader = ({ chatInfo }: { chatInfo?: ChatInfoWithMemberRole }) => {
-  const btnClasses = "py-0.5 pr-3 pl-2 rounded-md flex items-center gap-1 "
+  const btnClasses =
+    "hover:bg-white text-white py-0.5 pr-3 pl-2 rounded-md flex items-center gap-1 "
   const dispatch = useDispatch()
   return (
     <header className="bg-chat_bg shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] h-[3.75rem] flex items-center lg:px-[4.25rem] px-[1.25rem] justify-between">
@@ -15,10 +16,10 @@ const ChatHeader = ({ chatInfo }: { chatInfo?: ChatInfoWithMemberRole }) => {
             {chatInfo.title.toUpperCase()}
           </h1>
           {chatInfo.requesterRole !== "MEMBER" && (
-            <section className="flex gap-5 mr-[46px] md:mr-0">
+            <section className="flex gap-5 mr-[48px] md:mr-0">
               {chatInfo.requesterRole && (
                 <button
-                  className={btnClasses + "bg-blue"}
+                  className={btnClasses + "hover:text-blue bg-blue"}
                   onClick={() => dispatch(setModal("addMember"))}
                 >
                   <AddMember className="w-5 mb-px -mr-0.5 lg:mr-[1.5px]" />
@@ -28,7 +29,7 @@ const ChatHeader = ({ chatInfo }: { chatInfo?: ChatInfoWithMemberRole }) => {
               {(chatInfo.requesterRole === "OWNER" ||
                 chatInfo.requesterRole === null) && (
                 <button
-                  className={btnClasses + "bg-[#cc4f4f]"}
+                  className={btnClasses + "hover:text-red  bg-red"}
                   onClick={() => dispatch(setModal("deleteChat"))}
                 >
                   <DeleteIcon className="w-5 mb-px -mr-0.5 lg:mr-0" />
