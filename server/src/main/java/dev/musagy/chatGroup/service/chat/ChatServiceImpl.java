@@ -122,8 +122,8 @@ public class ChatServiceImpl implements ChatService {
 
         ChatUser member = getMemberById(chatUserPK);
 
-        if (ChatRole.MEMBER.equals(member.getRole()))
-            throw new InsufficientPrivilegesException("Este usuario no es un simple miembro del chat");
+        if (ChatRole.OWNER.equals(member.getRole()))
+            throw new IllegalArgumentException("No puedes quitar a un owner de su propio chat");
 
         cuRepo.deleteById(chatUserPK);
     }

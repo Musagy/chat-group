@@ -16,14 +16,17 @@ const ChatHeader = ({ chatInfo }: { chatInfo?: ChatInfoWithMemberRole }) => {
           </h1>
           {chatInfo.requesterRole !== "MEMBER" && (
             <section className="flex gap-5 mr-[46px] md:mr-0">
-              <button
-                className={btnClasses + "bg-blue"}
-                onClick={() => dispatch(setModal("addMember"))}
-              >
-                <AddMember className="w-5 mb-px -mr-0.5 lg:mr-[1.5px]" />
-                <span className="lg:inline hidden">Añadir Miembro</span>
-              </button>
-              {chatInfo.requesterRole === "OWNER" && (
+              {chatInfo.requesterRole && (
+                <button
+                  className={btnClasses + "bg-blue"}
+                  onClick={() => dispatch(setModal("addMember"))}
+                >
+                  <AddMember className="w-5 mb-px -mr-0.5 lg:mr-[1.5px]" />
+                  <span className="lg:inline hidden">Añadir Miembro</span>
+                </button>
+              )}
+              {(chatInfo.requesterRole === "OWNER" ||
+                chatInfo.requesterRole === null) && (
                 <button
                   className={btnClasses + "bg-[#cc4f4f]"}
                   onClick={() => dispatch(setModal("deleteChat"))}

@@ -24,6 +24,9 @@
 .saturate:hover {
   @apply brightness-150 saturate-150;
 }
+.unsaturate:hover {
+  @apply brightness-90 saturate-[.8];
+}
 .saturate-0.5:hover {
   @apply brightness-[1.25] saturate-[1.25] bg-msg_input;
 }
@@ -56,4 +59,26 @@
 
 .customScroll-2::-webkit-scrollbar-thumb:hover {
   background: #828282;
+}
+.decoration::after {
+  --height: 12px;
+  content: "";
+  position: absolute;
+  /* background-color: ; */
+  width: var(--height);
+  height: var(--height);
+  right: 24px;
+
+  border-right: var(--height) solid transparent;
+  border-left: var(--height) solid transparent;
+}
+.decoration-top::after {
+  bottom: calc(var(--height) * -2 + 2px);
+  border-bottom: var(--height) solid transparent;
+  border-top: var(--height) solid #e0e0e0;
+}
+.decoration-bottom::after {
+  top: calc(var(--height) * -2 + 2px);
+  border-top: var(--height) solid transparent;
+  border-bottom: var(--height) solid #e0e0e0;
 }

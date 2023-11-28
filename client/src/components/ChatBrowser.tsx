@@ -54,6 +54,7 @@ function ChatBrowser({
           />
         )}
         loaderOnView={loaderOnView}
+        className="overflow-y-auto customScroll"
         pages={pages}
       />
     </main>

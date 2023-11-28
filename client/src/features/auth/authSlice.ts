@@ -31,7 +31,7 @@ const authSlice = createSlice({
     },
     setCredentials: (state, { payload }) => {
       localStorage.setItem("auth", JSON.stringify(payload))
-      setValues(state, payload)
+      setValues(state, { ...payload, chatsHistory: [] })
     },
     logOut: state => {
       localStorage.removeItem("auth")

@@ -51,7 +51,10 @@ const Chat = () => {
         ) : (
           <Loading className="w-24 opacity-50" />
         )}
-        <CreateMessageInput sendMessage={sendMessage} />
+        <CreateMessageInput
+          disable={!chatInfo || chatInfo.requesterRole === null}
+          sendMessage={sendMessage}
+        />
       </section>
     </>
   )
