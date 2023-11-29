@@ -10,7 +10,7 @@ const initialState: Auth = {
 const nullifyValues = (state: Auth) => {
   state.user = null
   state.token = null
-  state.chatsHistory = []
+  state.chatsHistory = null
   if (!state.isStateInitialized) state.isStateInitialized = true
 }
 const setValues = (state: Auth, values: Auth) => {
@@ -31,7 +31,7 @@ const authSlice = createSlice({
     },
     setCredentials: (state, { payload }) => {
       localStorage.setItem("auth", JSON.stringify(payload))
-      setValues(state, { ...payload, chatsHistory: [] })
+      setValues(state, { ...payload, chatsHistory: null })
     },
     logOut: state => {
       localStorage.removeItem("auth")
@@ -57,13 +57,14 @@ const authSlice = createSlice({
       const auth = JSON.parse(authString) as Auth
 
       state.chatsHistory = [
+        ...(state.chatsHistory
+          ? state.chatsHistory.filter(v => v[0] !== newChatHistory[0])
+          : []),
         newChatHistory,
-        ...state.chatsHistory.filter(v => v[0] !== newChatHistory[0]),
       ].splice(0, 10)
       auth.chatsHistory = state.chatsHistory
 
       localStorage.setItem("auth", JSON.stringify(auth))
-      console.log(auth)
     },
   },
 })

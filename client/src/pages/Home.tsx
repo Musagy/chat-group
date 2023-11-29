@@ -14,7 +14,7 @@ const Home = () => {
       <h2
         className={
           "text-7xl font-bold text-white tracking-tighter text-center mx-6 " +
-          (chatsHistory.length > 0 && "mt-48")
+          (chatsHistory && chatsHistory.length > 0 && "mt-48")
         }
       >
         Chat Grupal
@@ -22,7 +22,7 @@ const Home = () => {
       <p className="text-3xl font-semibold text-[#666070] max-w-[190px] text-center">
         ¡Para todo!
       </p>
-      {chatsHistory.length > 0 && (
+      {chatsHistory && chatsHistory.length > 0 && (
         <section className="bg-chat_bg flex flex-col px-5 py-3 rounded-2xl shadow-[10px_10px_20px_#1b1a1e,-10px_-10px_20px_#2f2c34] mt-7 gap-5 mb-10">
           <p className="self-center px-4 text-2xl border-b-[3px] border-b-msg_placeholder">
             Recientes

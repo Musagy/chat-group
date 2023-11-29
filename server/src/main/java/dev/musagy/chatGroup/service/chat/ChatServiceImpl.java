@@ -31,8 +31,12 @@ public class ChatServiceImpl implements ChatService {
 
     @Transactional
     @Override
-    public Page<Chat> findChatsPageByUserId(long userId, Pageable pageable) {
-        Page<Chat> chats = chatRepo.findChatsPageByUserId(userId, pageable);
+    public Page<Chat> findChatsPageByUserId(long userId, Pageable pageable, String search) {
+        Page<Chat> chats =  chatRepo.findChatsPageByUserIdAndSearch(
+                userId,
+                search != null ? search : "",
+                pageable
+        );
 
         if (chats.getSize() == 0)
             throw new ResourceNotFoundException("Parece que ya no hay mas objetos que devolver");

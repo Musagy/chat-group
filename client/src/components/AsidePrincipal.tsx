@@ -9,14 +9,15 @@ import Error from "./states/Error"
 import NoChatsMessage from "./states/NoChatsMessage"
 import ChatBrowser from "./ChatBrowser"
 import CreateChatBtn from "./CreateChatBtn"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
 interface Props {
   chatHandler: (chat: ChatInfo) => void
 }
 
 const AsidePrincipal = ({ chatHandler }: Props) => {
-  const [search, setSearch] = useState("")
+  const [params] = useSearchParams()
+  const [search, setSearch] = useState(params.get("search") ?? "")
   const debouncedSearch = useDebounce<string>(search, 1000)
   const navigate = useNavigate()
 
@@ -29,7 +30,7 @@ const AsidePrincipal = ({ chatHandler }: Props) => {
     })
 
   useEffect(() => {
-    if (debouncedSearch) refetch()
+    refetch()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch])
 
@@ -48,7 +49,9 @@ const AsidePrincipal = ({ chatHandler }: Props) => {
       {status === "error" && <Error err={error} />}
       {status === "success" && (
         <>
-          {!(data.pages[0] as Pageable<ChatInfo>).empty ? (
+          {(data.pages[0] as Pageable<ChatInfo>).empty && search === "" ? (
+            <NoChatsMessage />
+          ) : (
             <ChatBrowser
               search={search}
               setSearch={setSearch}
@@ -57,8 +60,6 @@ const AsidePrincipal = ({ chatHandler }: Props) => {
               isFetching={isFetching}
               fetchNextPage={fetchNextPage}
             />
-          ) : (
-            <NoChatsMessage />
           )}
         </>
       )}

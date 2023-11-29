@@ -7,10 +7,9 @@ export const getChatsPage = async (
   { pageParam }: { pageParam: number },
   search: string
 ) => {
+  console.log(`${API}/chat/get-chats?page=${pageParam}&search=${search}`)
   const chatsPage = await fetch(
-    `${API}/chat/get-chats?page=${pageParam}${
-      search ? "&search=" + search : ""
-    }`,
+    `${API}/chat/get-chats?page=${pageParam}&search=${search}`,
     { headers: getAuthHeader() }
   ).then(data => data.json())
   return chatsPage

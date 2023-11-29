@@ -1,7 +1,7 @@
 import { ChatInfo } from "../models/ChatInfo"
 import { Pageable } from "../models/Pageable"
 import { SearchIcon } from "../assets/icons"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 import ChatItem from "./ChatItem"
 import { PaginatedList } from "./InfiniteList"
 
@@ -23,11 +23,18 @@ function ChatBrowser({
   fetchNextPage,
 }: Props) {
   const { chatId } = useParams()
+  const [, setParams] = useSearchParams()
   const loaderOnView = (inView: boolean) => {
     if (!isFetching && inView) {
       fetchNextPage()
     }
   }
+  const changeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearch = e.target.value
+    setSearch(newSearch)
+    setParams(newSearch !== "" ? { search: newSearch } : {})
+  }
+
   return (
     <main className="bg-[#33f0] flex flex-col gap-5 px-0 max-h-[calc(100vh-135px)] h-full">
       <label
@@ -40,23 +47,31 @@ function ChatBrowser({
           id="search"
           className="w-full bg-[#FFF0] outline-none"
           placeholder="Buscar..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
+          value={search || ""}
+          onChange={changeSearch}
         />
       </label>
-      <PaginatedList
-        itemRender={(chat: ChatInfo) => (
-          <ChatItem
-            key={chat.id}
-            chat={chat}
-            chatHandler={chatHandler}
-            isSelected={chatId !== undefined && +chatId == chat.id}
-          />
-        )}
-        loaderOnView={loaderOnView}
-        className="overflow-y-auto customScroll"
-        pages={pages}
-      />
+      {!pages[0].empty ? (
+        <PaginatedList
+          itemRender={(chat: ChatInfo) => (
+            <ChatItem
+              key={chat.id}
+              chat={chat}
+              chatHandler={chatHandler}
+              isSelected={chatId !== undefined && +chatId == chat.id}
+            />
+          )}
+          loaderOnView={loaderOnView}
+          className="overflow-y-auto customScroll"
+          pages={pages}
+        />
+      ) : (
+        <div className="h-full flex flex-col gap-6 justify-center items-center">
+          <h1 className="text-center text-2xl max-w-[170px] text-white font-bold">
+            No se a encontrado ninguna coincidencia
+          </h1>
+        </div>
+      )}
     </main>
   )
 }

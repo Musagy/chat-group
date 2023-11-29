@@ -6,7 +6,7 @@ export interface Auth {
   user: User | null
   token: string | null
   isStateInitialized: boolean
-  chatsHistory: ChatHistory[]
+  chatsHistory: ChatHistory[] | null
 }
 
 export interface AuthState {

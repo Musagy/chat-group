@@ -30,6 +30,22 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     """)
     Page<Chat> findChatsPageByUserId(@Param("userId") Long userId, Pageable pageable);
 
+    @Query("""
+    SELECT cu.chat
+    FROM ChatUser cu
+    WHERE cu.user.id = :userId
+    AND lower(cu.chat.title) LIKE lower(concat('%', :search, '%'))
+    AND cu.chat.isActive = TRUE
+    ORDER BY cu.chat.id DESC
+    """)
+    Page<Chat> findChatsPageByUserIdAndSearch(
+            @Param("userId")
+            Long userId,
+            @Param("search")
+            String search,
+            Pageable pageable
+    );
+
     @Modifying
     @Query("""
     UPDATE Chat c
