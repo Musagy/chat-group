@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface ChatService {
     @Transactional
-    Page<Chat> findChatsPageByUserId(long userId, Pageable pageable);
+    Page<Chat> findChatsPageByUserId(long userId, Pageable pageable, String search);
 
     Chat createChat(CreateChatRequest req, Long requesterId);
     @Transactional
@@ -19,6 +19,7 @@ public interface ChatService {
 
     // ChatUser Service
     ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId);
+    ChatUser addMemberByUsernameAndChatId(Long chatId, String username, Long requesterId);
     void deleteMemberByCUPK(ChatUserPK chatUserPK, Long requesterId);
 
     void addOwner(ChatUser chatUser);

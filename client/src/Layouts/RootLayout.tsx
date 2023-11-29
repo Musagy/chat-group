@@ -20,7 +20,7 @@ const RootLayout = () => {
   return (
     <main
       className={`grid ${
-        !pathname.startsWith("/sign") ? "grid-cols-[20.25rem_1fr] " : ""
+        !pathname.startsWith("/sign") ? "md:grid-cols-[20.25rem_1fr] " : ""
       } min-h-screen max-h-screen h-full`}
     >
       <LoadingApp visible={!isStateInitialized} />

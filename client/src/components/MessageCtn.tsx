@@ -6,17 +6,12 @@ import { Message as MessageType } from "../models/Message"
 import Message from "./Message"
 import { useMemo } from "react"
 import { getMessagesPage } from "../api/messageRequest"
-import { useSelector } from "react-redux"
-import { selectCurrentUser } from "../features/auth/authSlice"
-import { User } from "../models/User"
 
 interface Props {
   chatId: number
   newMessages: MessageType[]
 }
 const MessagesCtn = ({ chatId, newMessages }: Props) => {
-  const user = useSelector(selectCurrentUser) as User
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const connectionTime: Date = useMemo(() => new Date(), [chatId])
 
@@ -37,13 +32,9 @@ const MessagesCtn = ({ chatId, newMessages }: Props) => {
       {status === "error" && <Error err={error} />}
       {status === "success" && (
         <PaginatedList
-          className="flex-col-reverse max-h-[calc(100vh-40px-60px-54px)] py-5 gap-9 pr-4 customScroll-2"
+          className="flex-col-reverse max-h-[calc(100vh-40px-60px-54px)] py-5 gap-9 pr-4 customScroll-2 overflow-y-auto customScroll"
           itemRender={(message: MessageType) => (
-            <Message
-              key={message.id}
-              message={message}
-              isYours={message.username === user.username}
-            />
+            <Message key={message.id} message={message} />
           )}
           loaderOnView={loaderOnView}
           pages={data?.pages}

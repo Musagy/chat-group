@@ -13,6 +13,7 @@ export default {
       msg_input: "#3C393F",
       msg_placeholder: "#828282",
       blue: "#2F80ED",
+      red: "#EB5757",
       gray: "#BDBDBD",
       white: "#E0E0E0",
     },

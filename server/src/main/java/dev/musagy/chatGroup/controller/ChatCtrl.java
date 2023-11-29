@@ -22,11 +22,14 @@ public class ChatCtrl {
     private ChatService chatService;
 
     @GetMapping("/get-chats") // init index is 0
-    public ResponseEntity<Page<Chat>> getChatsPage (@RequestParam int page) {
+    public ResponseEntity<Page<Chat>> getChatsPage (
+            @RequestParam int page,
+            @RequestParam String search
+    ) {
         Long requesterId = SecurityUtils.getAuthenticatedUserId();
         Pageable pageable = PageRequest.of(page,10);
 
-        Page<Chat> chats = chatService.findChatsPageByUserId(requesterId, pageable);
+        Page<Chat> chats = chatService.findChatsPageByUserId(requesterId, pageable, search);
 
         return ResponseEntity.ok(chats);
     }
@@ -76,9 +79,9 @@ public class ChatCtrl {
     }
 
     @PostMapping("/add-member")
-    public ResponseEntity<ChatUser> addMember(@Valid @RequestBody ChatUserPK req) {
+    public ResponseEntity<ChatUser> addMember(@Valid @RequestBody AddMemberRequest req) {
         Long requesterId = SecurityUtils.getAuthenticatedUserId();
-        ChatUser newMember = chatService.addMemberByCUPK(req, requesterId);
+        ChatUser newMember = chatService.addMemberByUsernameAndChatId(req.chatId(), req.username(), requesterId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
     }

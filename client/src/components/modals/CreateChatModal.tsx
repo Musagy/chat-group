@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { CreateChatReq } from "../../models/Requests"
 import { createChanger } from "../../utils/formatters"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createNewChat } from "../../api/chatRequests"
 import Loading from "../states/Loading"
 import { validateFormField } from "../../utils/validater"
@@ -13,7 +13,10 @@ function CreateChatModal() {
     title: "",
     description: "",
   })
+
+  const queryClient = useQueryClient()
   const dispatch = useDispatch()
+
   const submitHandler: React.FormEventHandler = e => {
     e.preventDefault()
     if (validateFormField(formData)) {
@@ -21,6 +24,7 @@ function CreateChatModal() {
       dispatch(closeModal())
     }
   }
+
   const { description: descChanger, title: titleChanger } = createChanger(
     formData,
     setFormData,
@@ -33,6 +37,9 @@ function CreateChatModal() {
   const { mutate, status } = useMutation({
     mutationFn: createNewChat,
     onError: e => alert(e.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chats"] })
+    },
   })
 
   return (

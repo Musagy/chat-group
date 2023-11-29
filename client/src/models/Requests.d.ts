@@ -1,4 +1,4 @@
-import { User } from "./User"
+import { ChatRole, User } from "./User"
 
 // Auth Requests
 
@@ -25,4 +25,17 @@ export interface SignUpAndSignInResponse {
 export interface CreateChatReq {
   title: string
   description: string
+}
+
+export interface AddNewMember {
+  username: string
+  chatId: number
+}
+
+export interface ChangeRole {
+  chatUserPK: {
+    user: number
+    chat: number
+  }
+  role: ChatRole
 }

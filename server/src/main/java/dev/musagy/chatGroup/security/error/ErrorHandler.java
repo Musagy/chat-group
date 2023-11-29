@@ -46,11 +46,16 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> BadCredentialsException(Exception e) {
+    public ResponseEntity<String> BadCredentials(Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> userNotFound(Exception e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(InsufficientPrivilegesException.class)
+    public ResponseEntity<String> InsufficientPrivileges(Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

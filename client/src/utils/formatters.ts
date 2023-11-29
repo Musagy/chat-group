@@ -2,7 +2,9 @@ export const getInitials = (text: string) => {
   const words = text.split(" ").slice(0, 2)
   let result = ""
 
-  words.forEach(word => (result += word[0].toUpperCase()))
+  words.forEach(word => {
+    if (word.length > 0) result += word[0].toUpperCase()
+  })
 
   return result
 }

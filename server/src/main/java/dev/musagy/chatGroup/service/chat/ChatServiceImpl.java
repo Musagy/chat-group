@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,12 @@ public class ChatServiceImpl implements ChatService {
 
     @Transactional
     @Override
-    public Page<Chat> findChatsPageByUserId(long userId, Pageable pageable) {
-        Page<Chat> chats = chatRepo.findChatsPageByUserId(userId, pageable);
+    public Page<Chat> findChatsPageByUserId(long userId, Pageable pageable, String search) {
+        Page<Chat> chats =  chatRepo.findChatsPageByUserIdAndSearch(
+                userId,
+                search != null ? search : "",
+                pageable
+        );
 
         if (chats.getSize() == 0)
             throw new ResourceNotFoundException("Parece que ya no hay mas objetos que devolver");
@@ -41,7 +46,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat createChat(CreateChatRequest req, Long requesterId) {
-        Chat requestChat = new Chat(null, req.title(), req.description(), requesterId);
+        Chat requestChat = new Chat(null, req.title(), req.description(), requesterId, true);
         Chat newChat = chatRepo.save(requestChat);
         User user = SecurityUtils.getAuthenticatedUser().getUser();
         addOwner(new ChatUser(user, newChat, null));
@@ -56,8 +61,7 @@ public class ChatServiceImpl implements ChatService {
         if (!ownerId.equals(chat.getOwnerId()))
             throw new InsufficientPrivilegesException("Para eliminar este chat necesitas ser su creador");
 
-        cuRepo.clearMembersByChatId(chatId);
-        chatRepo.deleteById(chatId);
+        chatRepo.deactivateChatById(chatId);
     }
 
     @Override
@@ -66,6 +70,9 @@ public class ChatServiceImpl implements ChatService {
                 .orElseThrow(()-> new ResourceNotFoundException("No se encontró un chat con esta ID"));
 
         ChatRole memberRole = permissionEvaluator(chatId, userId);
+
+        if (!chat.isActive() && memberRole != null)
+            throw new ResourceNotFoundException("No se encontró un chat con esta ID");
 
         return addRequesterRoleInChat(chat, memberRole);
     }
@@ -81,18 +88,30 @@ public class ChatServiceImpl implements ChatService {
         return chatRepo.findUserSummariesPageByChatId(chatId, pageable);
     }
 
-    @Override
-    public ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
-        validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
-
-        if (isMember(chatUserPK))
+    private ChatUser addMember(Long chatId, User user) {
+        if (isMember(new ChatUserPK(user.getId(), chatId)))
             throw new EntityExistsException("El usuario ya es miembro de este chat");
 
-        User user = userService.findById(chatUserPK.getUser());
-        Chat chat = findByIdInServer(chatUserPK.getChat());
+        Chat chat = findByIdInServer(chatId);
         ChatUser newRelationship = new ChatUser(user, chat, ChatRole.MEMBER);
 
         return cuRepo.save(newRelationship);
+    }
+
+    @Override
+    public ChatUser addMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
+        validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
+        return addMember(chatUserPK.getChat(), userService.findById(chatUserPK.getUser()));
+    }
+
+    @Override
+    public ChatUser addMemberByUsernameAndChatId(Long chatId, String username, Long requesterId) {
+        validateRequesterAuthorization(requesterId, chatId, ChatRole.ADMIN);
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "El usuario no fue encontrado: " + username
+                ));
+        return addMember(chatId, user);
     }
 
     @Override
@@ -105,15 +124,17 @@ public class ChatServiceImpl implements ChatService {
     public void deleteMemberByCUPK(ChatUserPK chatUserPK, Long requesterId) {
         validateRequesterAuthorization(requesterId, chatUserPK.getChat(), ChatRole.ADMIN);
 
-        if (!isMember(chatUserPK))
-            throw new EntityNotFoundException("El usuario no es un miembro de este chat");
+        ChatUser member = getMemberById(chatUserPK);
+
+        if (ChatRole.OWNER.equals(member.getRole()))
+            throw new IllegalArgumentException("No puedes quitar a un owner de su propio chat");
 
         cuRepo.deleteById(chatUserPK);
     }
 
     private ChatUser getMemberById(ChatUserPK chatUserPK) {
         return cuRepo.findById(chatUserPK).orElseThrow(
-                () -> new ResourceNotFoundException("El usuario no es un miembro de este chat"));
+                () -> new EntityNotFoundException("El usuario no es un miembro de este chat"));
     }
     private boolean isMember(ChatUserPK chatUserPK) {
         return cuRepo.existsById(chatUserPK);

@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { closeModal, selectCurrentModal } from "../features/modal/modalSlice"
 import CreateChatModal from "./modals/CreateChatModal"
+import AddMemberModal from "./modals/AddMemberModal"
+import DeleteChatModal from "./modals/DeleteChatModal"
+import { useEffect } from "react"
 
 const Modal = () => {
   const currentModal = useSelector(selectCurrentModal)
@@ -8,6 +11,10 @@ const Modal = () => {
   const bgHandler = () => {
     dispatch(closeModal())
   }
+  useEffect(() => {
+    console.log(currentModal)
+  }, [currentModal])
+
   return (
     currentModal && (
       <div className="absolute w-full h-full grid place-items-center">
@@ -16,7 +23,9 @@ const Modal = () => {
           className="absolute bg-[rgb(18,15,19)] bg-opacity-50 w-full h-full"
         />
         <div className="absolute bg-aside_bg px-11 py-8 rounded-3xl flex flex-col gap-6 max-w-[36rem] w-full font-bold text-lg overflow-hidden">
-          {currentModal == "createChat" && <CreateChatModal />}
+          {currentModal === "createChat" && <CreateChatModal />}
+          {currentModal === "addMember" && <AddMemberModal />}
+          {currentModal === "deleteChat" && <DeleteChatModal />}
         </div>
       </div>
     )

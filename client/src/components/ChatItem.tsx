@@ -15,7 +15,7 @@ const ChatItem = ({ chat, chatHandler, isSelected }: Props) => {
 
   return (
     <li
-      className="py-3 px-4 hover:bg-chat_bg hover:bg-opacity-60 flex items-center gap-3"
+      className="py-3 px-4 hover:bg-chat_bg hover:bg-opacity-60 flex items-center gap-3 cursor-pointer"
       onClick={() => chatHandler(chat)}
     >
       <picture className={pfpClassStyle}>{pfpChat}</picture>

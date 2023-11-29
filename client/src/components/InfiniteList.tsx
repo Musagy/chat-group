@@ -20,7 +20,7 @@ export function PaginatedList<T>({
   className = "",
 }: PaginatedListProps<T>) {
   return (
-    <ul className={"flex flex-col overflow-y-auto customScroll " + className}>
+    <ul className={"flex flex-col  " + className}>
       {newItems && newItems.length != 0 && newItems.map(itemRender)}
       {pages.map((chatsPage, i) => (
         <Fragment key={chatsPage.number}>
@@ -66,6 +66,7 @@ export function InfiniteQueryList<T>({
         <PaginatedList
           itemRender={itemRender}
           loaderOnView={loaderOnView}
+          className="h-full"
           pages={data?.pages}
         />
       )}
