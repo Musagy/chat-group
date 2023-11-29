@@ -1,5 +1,6 @@
 import { UseMutateFunction } from "@tanstack/react-query"
 import { ChatRole, Member } from "../models/User"
+import { ReactNode } from "react"
 
 const SuperOptions = ({
   member,
@@ -29,13 +30,9 @@ const SuperOptions = ({
     })
   }
   return (
-    <div
-      className={
-        "bg-chat_bg absolute right-px hidden group-hover/member:flex flex-col p-3 rounded-lg z-[3] items-center decoration shadow-[0px_0px_0px_1px_rgba(60,57,63,1)] " +
-        (!inBottom
-          ? "bottom-[60px] hidden decoration-top"
-          : "top-[60px] decoration-bottom")
-      }
+    <OptionsCtn
+      inBottom={inBottom}
+      className="hidden group-hover/member:flex right-px "
     >
       <Btn
         text="Eliminar miembro"
@@ -59,7 +56,7 @@ const SuperOptions = ({
           )}
         </>
       )}
-    </div>
+    </OptionsCtn>
   )
 }
 
@@ -73,14 +70,35 @@ const Btn = ({
   onClick?: () => void
 }) => (
   <button
-    className={
-      className +
-      " unsaturate rounded-md py-0.5 px-2 w-full after hover:text-white"
-    }
+    className={className + " rounded-md py-0.5 px-2 w-full hover:text-white"}
     onClick={onClick}
   >
     {text}
   </button>
 )
+
+export const OptionsCtn = ({
+  inBottom,
+  children,
+  className,
+}: {
+  className?: string
+  inBottom?: boolean
+  children: ReactNode
+}) => {
+  return (
+    <div
+      className={
+        (!inBottom
+          ? "bottom-[60px] decoration-top"
+          : "top-[60px] decoration-bottom") +
+        " bg-chat_bg absolute flex-col p-3 rounded-lg z-[3] items-center decoration shadow-[0px_0px_0px_1px_rgba(60,57,63,1)] " +
+        className
+      }
+    >
+      {children}
+    </div>
+  )
+}
 
 export default SuperOptions

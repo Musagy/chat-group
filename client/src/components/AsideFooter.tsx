@@ -1,9 +1,11 @@
-import { memo } from "react"
+import { memo, useState } from "react"
 import { DownArrowIcon } from "../assets/icons"
 import { User } from "../models/User"
-import { useSelector } from "react-redux"
-import { selectCurrentUser } from "../features/auth/authSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { logOut, selectCurrentUser } from "../features/auth/authSlice"
 import UserItem from "./UserItem"
+import { OptionsCtn } from "./SuperOptions"
+import { useNavigate } from "react-router-dom"
 
 const gradients: { from: string; to: string; textDark: boolean }[] = [
   {
@@ -60,19 +62,48 @@ const gradients: { from: string; to: string; textDark: boolean }[] = [
 
 const AsideFooter = memo(function () {
   const user = useSelector(selectCurrentUser) as User
+  const [isOpenOptions, setIsOpenOptions] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const randomIndex = Math.floor(Math.random() * gradients.length)
 
+  const logoutFn = () => {
+    dispatch(logOut())
+    navigate("sign-in")
+  }
+
   const bg = gradients[randomIndex]
   return (
-    <footer className="bg-aside_bg bg-opacity-50 h-[75px] bottom-[-75px] w-full flex items-center gap-5 px-4 content-center">
+    <footer className="row-start-2 bg-aside_bg bg-opacity-50 h-[75px] w-full flex items-center gap-5 px-4 content-center relative">
       <UserItem
         className={`bg-gradient-to-tr ${bg.from} ${bg.to} ${
           bg.textDark ? "text-chat_bg" : "text-white"
         }`}
         user={user}
       >
-        <DownArrowIcon className="w-5" />
+        <button
+          className="z-[4]"
+          onClick={() => {
+            setIsOpenOptions(preVal => !preVal)
+            console.log(isOpenOptions)
+          }}
+        >
+          <DownArrowIcon className="w-5" />
+        </button>
+        {isOpenOptions && (
+          <OptionsCtn className="after:right-1.5 before:right-1.5 right-1.5 ">
+            <button
+              className={
+                " rounded-md py-0.5 px-2 w-full hover:text-white " +
+                "hover:bg-red text-red"
+              }
+              onClick={logoutFn}
+            >
+              Log out
+            </button>
+          </OptionsCtn>
+        )}
       </UserItem>
     </footer>
   )
