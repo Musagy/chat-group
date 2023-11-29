@@ -21,6 +21,30 @@ const AuthForm = () => {
     flex flex-col justify-center items-center bg-chat_bg gap-2"
     >
       <Outlet />
+      <p className="text-msg_placeholder max-w-[18rem] text-center">
+        {location.pathname === "/sign-in" && (
+          <>
+            Si no te has registrado, hazlo acá:{" "}
+            <a
+              onClick={() => navigate("/sign-up")}
+              className="text-white cursor-pointer"
+            >
+              Crear cuenta
+            </a>
+          </>
+        )}
+        {location.pathname === "/sign-up" && (
+          <>
+            Si ya tienes cuenta, inicia sección acá:{" "}
+            <a
+              onClick={() => navigate("/sign-in")}
+              className="text-white cursor-pointer"
+            >
+              Inicio de sección
+            </a>
+          </>
+        )}
+      </p>
     </main>
   )
 }
