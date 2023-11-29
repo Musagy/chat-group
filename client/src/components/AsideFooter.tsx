@@ -2,7 +2,11 @@ import { memo, useState } from "react"
 import { DownArrowIcon } from "../assets/icons"
 import { User } from "../models/User"
 import { useDispatch, useSelector } from "react-redux"
-import { logOut, selectCurrentUser } from "../features/auth/authSlice"
+import {
+  logOut,
+  selectCurrentUser,
+  selectPfpBgColor,
+} from "../features/auth/authSlice"
 import UserItem from "./UserItem"
 import { OptionsCtn } from "./SuperOptions"
 import { useNavigate } from "react-router-dom"
@@ -66,14 +70,14 @@ const AsideFooter = memo(function () {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const randomIndex = Math.floor(Math.random() * gradients.length)
+  const pfpBgColor = useSelector(selectPfpBgColor)
 
   const logoutFn = () => {
     dispatch(logOut())
     navigate("sign-in")
   }
 
-  const bg = gradients[randomIndex]
+  const bg = gradients[pfpBgColor]
   return (
     <footer className="row-start-2 bg-aside_bg bg-opacity-50 h-[75px] w-full flex items-center gap-5 px-4 content-center relative">
       <UserItem

@@ -7,6 +7,7 @@ export interface Auth {
   token: string | null
   isStateInitialized: boolean
   chatsHistory: ChatHistory[] | null
+  pfpBgColor: number
 }
 
 export interface AuthState {

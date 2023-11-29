@@ -6,6 +6,7 @@ const initialState: Auth = {
   token: null,
   user: null,
   chatsHistory: [],
+  pfpBgColor: 0,
 }
 const nullifyValues = (state: Auth) => {
   state.user = null
@@ -17,6 +18,7 @@ const setValues = (state: Auth, values: Auth) => {
   state.token = values.token
   state.user = values.user
   state.chatsHistory = values.chatsHistory
+  state.pfpBgColor = Math.floor(Math.random() * 10)
   if (!state.isStateInitialized) state.isStateInitialized = true
 }
 
@@ -82,5 +84,6 @@ export default authSlice.reducer
 export const selectCurrentUser = (state: AuthState) => state.auth.user
 export const selectCurrentToken = (state: AuthState) => state.auth.token
 export const selectChatsHistory = (state: AuthState) => state.auth.chatsHistory
+export const selectPfpBgColor = (state: AuthState) => state.auth.pfpBgColor
 export const selectIsStateInitialized = (state: AuthState) =>
   state.auth.isStateInitialized
