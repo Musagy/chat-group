@@ -6,8 +6,10 @@ const bgArray: { [T in ChatRole]?: string } = {
 }
 
 const RoleBox = ({ role }: { role: ChatRole }) =>
-  role !== "MEMBER" && (
+  role !== "MEMBER" ? (
     <p className={"px-2 rounded-lg " + bgArray[role]}>{role}</p>
+  ) : (
+    <></>
   )
 
 export default RoleBox

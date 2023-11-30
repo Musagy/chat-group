@@ -1,4 +1,4 @@
-FROM jelastic/maven:3.9.5-openjdk-21
+FROM maven:3.9.5-eclipse-temurin-21-alpine
 
 WORKDIR /app
 

@@ -51,10 +51,7 @@ const useMessageWebSocketSubscription = (
     stompClient.current = Stomp.over(socket)
     stompClient.current.debug = () => {}
     stompClient.current.connect(getAuthHeader(), () => {
-      if (!stompClient.current) {
-        console.log("No se pudo conectar")
-        return
-      }
+      if (!stompClient.current) return
 
       stompClient.current.subscribe(
         `/topic/${chatId}`,

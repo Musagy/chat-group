@@ -32,7 +32,6 @@ export default function AsideChatInfo({ chatInfo, isOpen, setIsOpen }: Props) {
       queryClient.invalidateQueries({ queryKey: ["member", id.toString()] })
     },
   })
-  console.log(requesterRole)
   return (
     <section
       className={

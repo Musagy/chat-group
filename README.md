@@ -3,7 +3,7 @@
 <h1 align="center">⭐ Chat Group ⭐</h1>
 
 <div align="center">
-   Solución para el reto de  <a href="https://legacy.devchallenges.io" target="_blank">Devchallenges.io</a>.
+   Solución para el reto de <a href="https://legacy.devchallenges.io" target="_blank">Devchallenges.io</a>.
 </div>
 
 <div align="center">
@@ -29,7 +29,7 @@
 - [Descripción general](#descripci%C3%B3n-general)
   - [Hecho con](#hecho-con)
 - [Features | Características](#features--caracter%C3%ADsticas)
-- [How to use](#como-usarlo-tu-mismo)
+- [Como usarlo tu mismo](#como-usarlo-tu-mismo)
 - [Agradecimientos](#agradecimientos)
 - [Contacto](#contactos)
 
@@ -44,24 +44,34 @@
 
 ### Hecho con
 
-- [React](https://reactjs.org/)
-- [Tailwind](https://tailwindcss.com/)
+> Principales
 - [Spring Boot](https://spring.io/)
+- [React](https://reactjs.org/)
+- [MySql](https://www.mysql.com/)
 - [Docker](https://www.docker.com)
+
+> Secundarias
+- [TypeScript](https://www.typescriptlang.org)
+- [Tailwind](https://tailwindcss.com/)
+- [React Router](https://reactrouter.com)
+- [TanStack Query](https://tanstack.com/query/v3/)
+- [JWT](https://jwt.io)
+- [Redux](https://es.redux.js.org)
+- [Stomp](https://stomp-js.github.io)
 
 ## Features | Características
 
-> Si tiene ✔️ ya esta agregado.
-> Si tiene ❌ aun no esta agregada la característica.
+> Si tiene ✔️ ya está agregado.
+> Si tiene ❌ aún no está agregada la característica.
 
-- De forma predeterminada, estoy en el canal de bienvenida ❌
+- De forma predeterminada, estoy en el canal de bienvenida ✔️
 - Puedo crear un nuevo canal con un nombre y una descripción ✔️
 - Puedo seleccionar un canal de mi elección ✔️
-- Cuando puedo seleccionar un canal, se me agrega como miembro del canal ❌
+- Cuando puedo seleccionar un canal, se me agrega como miembro del canal ✔️
 - Puedo ver a un miembro del canal ✔️
 - Puedo enviar un mensaje ✔️
 - Puedo ver los mensajes de otras personas ✔️
-- Puedo buscar un grupo ❌
+- Puedo buscar un grupo ✔️
 
 ## Como usarlo tu mismo.
 
@@ -75,14 +85,8 @@ $ git clone https://github.com/Musagy/chat-group
 $ docker-compose up -d
 ```
 
-## Agradecimientos
-
-- [Dockerizar API REST Java + Spring Boot con PostgreSQL y Docker Compose 2023](https://www.youtube.com/watch?v=uqBZEL9m2V4)
-- [Claude AI](https://claude.ai)
-
 ## Contactos
 
 **Musagy**
-
 - Website [musagy.dev.com](https://musagy.dev)
 - GitHub [@Musagy](https://github.com/Musagy)

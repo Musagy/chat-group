@@ -88,10 +88,7 @@ const AsideFooter = memo(function () {
       >
         <button
           className="z-[4]"
-          onClick={() => {
-            setIsOpenOptions(preVal => !preVal)
-            console.log(isOpenOptions)
-          }}
+          onClick={() => setIsOpenOptions(preVal => !preVal)}
         >
           <DownArrowIcon className="w-5" />
         </button>

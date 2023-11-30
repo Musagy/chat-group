@@ -3,7 +3,6 @@ import { closeModal, selectCurrentModal } from "../features/modal/modalSlice"
 import CreateChatModal from "./modals/CreateChatModal"
 import AddMemberModal from "./modals/AddMemberModal"
 import DeleteChatModal from "./modals/DeleteChatModal"
-import { useEffect } from "react"
 
 const Modal = () => {
   const currentModal = useSelector(selectCurrentModal)
@@ -11,9 +10,6 @@ const Modal = () => {
   const bgHandler = () => {
     dispatch(closeModal())
   }
-  useEffect(() => {
-    console.log(currentModal)
-  }, [currentModal])
 
   return (
     currentModal && (

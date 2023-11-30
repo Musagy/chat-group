@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom"
 import { signUpRequest } from "../api/authRequest"
 
 const SignUp = () => {
-  useChangeTitle("Inicio de sesión")
+  useChangeTitle("Crear cuenta")
 
   // Creación de estados de los campos
   const [formData, setFormData] = useState<SignUpReq>({

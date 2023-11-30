@@ -12,4 +12,4 @@ RUN pnpm run build
 
 EXPOSE 3000
 
-CMD ["pnpm", "run", "preview"]
+CMD ["pnpm", "run", "preview", "--port", "3000", "--host"]
