@@ -88,5 +88,5 @@ $ docker-compose up -d
 ## Contactos
 
 **Musagy**
-- Website [musagy.dev.com](https://musagy.dev)
+- Website [musagy.dev](https://musagy.dev)
 - GitHub [@Musagy](https://github.com/Musagy)
